@@ -1,0 +1,40 @@
+---
+import MainSeparator from "../../components/MainSeparator.astro";
+import ProjectGallery from "../../components/ProjectGallery.astro";
+import ProjectHeader from "../../components/ProjectHeader.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getProjectBySlug, getSiteNavigation, projects } from "../../data/projects";
+import { parseProjectImages } from "../../lib/projectAssets";
+
+export function getStaticPaths() {
+	return projects.map((project) => ({
+		params: { slug: project.slug },
+	}));
+}
+
+const { slug } = Astro.params;
+const project = getProjectBySlug(slug!);
+
+if (!project) {
+	throw new Error(`Unknown project slug: ${slug}`);
+}
+
+const navigation = getSiteNavigation({ slug: project.slug });
+const sections = parseProjectImages(
+	project.slug,
+	project.sectionOrder,
+	project.sectionColumns,
+);
+---
+
+<BaseLayout
+	title={`${project.title} — Guldvarg Studio`}
+	background={project.background}
+	{...navigation}
+>
+	<div class="project">
+		<ProjectHeader project={project} />
+		<ProjectGallery sections={sections} />
+		<MainSeparator />
+	</div>
+</BaseLayout>

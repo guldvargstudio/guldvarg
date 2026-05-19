@@ -1,0 +1,94 @@
+---
+import { ClientRouter, fade } from "astro:transitions";
+import "../styles/global.css";
+import StepNav from "../components/StepNav.astro";
+import {
+	contentTransitionDurationCss,
+	contentTransitionEasingCss,
+	pageBgEasingCss,
+	pageBgTransitionCss,
+} from "../config/motion";
+import { defaultPageBackground, getPageBgEnd } from "../data/projects";
+
+interface Props {
+	title?: string;
+	active?: "home" | "about" | "project";
+	prevHref?: string;
+	nextHref?: string;
+	background?: string;
+	activeDotIndex?: number;
+	dotCount?: number;
+}
+
+const {
+	title = "Guldvarg Studio",
+	active = "home",
+	prevHref,
+	nextHref,
+	background,
+	activeDotIndex,
+	dotCount,
+} = Astro.props;
+
+const pageBackground = background ?? defaultPageBackground;
+const pageBgEnd = getPageBgEnd(pageBackground);
+---
+
+<!doctype html>
+<html lang="sv">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<style is:global>
+			:root {
+				--page-bg-transition-duration: {pageBgTransitionCss};
+				--page-bg-transition-easing: {pageBgEasingCss};
+				--content-transition-duration: {contentTransitionDurationCss};
+				--content-transition-easing: {contentTransitionEasingCss};
+			}
+		</style>
+		<ClientRouter fallback="swap" />
+		<script>
+			import "../scripts/transitions.ts";
+		</script>
+	</head>
+	<body
+		data-step-nav-active={active}
+		data-step-nav-prev={prevHref}
+		data-step-nav-next={nextHref}
+		data-step-nav-dot={activeDotIndex ?? ""}
+		data-page-bg-end={pageBgEnd}
+	>
+		<div
+			id="page-bg-fill"
+			transition:persist="page-bg-fill"
+			transition:animate="none"
+			aria-hidden="true"
+		></div>
+		<div
+			id="page-bg"
+			transition:persist="page-bg"
+			transition:animate="none"
+			aria-hidden="true"
+		></div>
+		<StepNav
+			active={active}
+			prevHref={prevHref}
+			nextHref={nextHref}
+			activeDotIndex={activeDotIndex}
+			dotCount={dotCount}
+		/>
+		<div class="page">
+			<main
+				transition:name="main"
+				transition:animate={fade({ duration: contentTransitionDurationCss })}
+			>
+				<slot />
+			</main>
+		</div>
+	</body>
+</html>

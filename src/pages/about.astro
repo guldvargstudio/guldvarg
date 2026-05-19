@@ -1,0 +1,15 @@
+---
+import AboutContent from "../components/AboutContent.astro";
+import MainSeparator from "../components/MainSeparator.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getSiteNavigation } from "../data/projects";
+
+const navigation = getSiteNavigation("about");
+---
+
+<BaseLayout title="About — Guldvarg Studio" {...navigation}>
+	<div class="about">
+		<AboutContent />
+		<MainSeparator />
+	</div>
+</BaseLayout>

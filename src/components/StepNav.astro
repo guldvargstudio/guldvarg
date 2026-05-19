@@ -1,0 +1,189 @@
+---
+import { projects } from "../data/projects";
+
+interface Props {
+	active?: "home" | "about" | "project";
+	prevHref?: string;
+	nextHref?: string;
+	dotCount?: number;
+	activeDotIndex?: number;
+}
+
+const {
+	active = "home",
+	prevHref = "/",
+	nextHref = "/about",
+	dotCount = projects.length,
+	activeDotIndex,
+} = Astro.props;
+---
+
+<nav class="step-nav" transition:persist transition:animate="none" aria-label="Site navigation">
+	<div class="step-nav__inner">
+		<a class="step-nav__btn" href={prevHref} aria-label="Previous" data-nav-direction="prev">
+			<svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+				<path
+					d="M28 0C32.4183 0 36 3.58172 36 8V28C36 32.4183 32.4183 36 28 36H8C3.58172 36 3.22139e-08 32.4183 0 28V8C0 3.58172 3.58172 3.22128e-08 8 0H28ZM20.6875 11.3125C20.3125 10.9062 19.6562 10.9062 19.2812 11.3125L13.2812 17.3125C12.875 17.6875 12.875 18.3438 13.2812 18.7188L19.2812 24.7188C19.6562 25.125 20.3125 25.125 20.6875 24.7188C21.0938 24.3438 21.0938 23.6875 20.6875 23.3125L15.4062 18L20.6875 12.7188C21.0938 12.3438 21.0938 11.6875 20.6875 11.3125Z"
+					fill="currentColor"></path>
+			</svg>
+		</a>
+
+		<div class="step-nav__center">
+			<a
+				class:list={["step-nav__label", { "step-nav__label--active": active === "home" }]}
+				href="/"
+			>
+				Home
+			</a>
+
+			<div class="step-nav__dots">
+				{projects.map((project, index) => (
+					<a
+						class:list={[
+							"step-nav__dot",
+							{ "step-nav__dot--active": activeDotIndex === index },
+						]}
+						href={`/projects/${project.slug}`}
+						aria-label={project.title}
+						aria-current={activeDotIndex === index ? "page" : undefined}
+					/>
+				))}
+			</div>
+
+			<a
+				class:list={["step-nav__label", { "step-nav__label--active": active === "about" }]}
+				href="/about"
+			>
+				About
+			</a>
+		</div>
+
+		<a
+			class="step-nav__btn step-nav__btn--next"
+			href={nextHref}
+			aria-label="Next"
+			data-nav-direction="next"
+		>
+			<svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+				<path
+					d="M28 0C32.4183 0 36 3.58172 36 8V28C36 32.4183 32.4183 36 28 36H8C3.58172 36 3.22139e-08 32.4183 0 28V8C0 3.58172 3.58172 3.22128e-08 8 0H28ZM20.6875 11.3125C20.3125 10.9062 19.6562 10.9062 19.2812 11.3125L13.2812 17.3125C12.875 17.6875 12.875 18.3438 13.2812 18.7188L19.2812 24.7188C19.6562 25.125 20.3125 25.125 20.6875 24.7188C21.0938 24.3438 21.0938 23.6875 20.6875 23.3125L15.4062 18L20.6875 12.7188C21.0938 12.3438 21.0938 11.6875 20.6875 11.3125Z"
+					fill="currentColor"></path>
+			</svg>
+		</a>
+	</div>
+</nav>
+
+<style>
+	.step-nav {
+		position: relative;
+		z-index: 2;
+		width: 100%;
+		padding: var(--nav-padding-y) 0;
+	}
+
+	.step-nav__inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: var(--content-width);
+		height: 36px;
+		margin: 0 auto;
+	}
+
+	.step-nav__btn {
+		display: flex;
+		flex-shrink: 0;
+		width: 36px;
+		height: 36px;
+	}
+
+	.step-nav__btn--next {
+		transform: rotate(180deg);
+	}
+
+	.step-nav__center {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	.step-nav__dots {
+		display: flex;
+		align-items: center;
+		gap: 24px;
+	}
+
+	@media (max-width: 768px) {
+		.step-nav__center,
+		.step-nav__dots {
+			gap: 16px;
+		}
+	}
+</style>
+
+<style is:global>
+	.step-nav a.step-nav__label {
+		font-family: var(--font-display);
+		font-size: 14px;
+		font-weight: 800;
+		line-height: 1;
+		letter-spacing: 1.4px;
+		text-transform: uppercase;
+		color: var(--color-rust-1-20);
+		white-space: nowrap;
+		transition: var(--transition-interactive);
+	}
+
+	.step-nav a.step-nav__label.step-nav__label--active {
+		color: var(--color-rust-1);
+	}
+
+	.step-nav a.step-nav__btn {
+		color: var(--color-rust-1);
+		transition: var(--transition-interactive);
+	}
+
+	.step-nav a.step-nav__dot {
+		display: grid;
+		place-items: center;
+		flex-shrink: 0;
+		width: 16px;
+		height: 16px;
+	}
+
+	.step-nav a.step-nav__dot::before {
+		content: "";
+		display: block;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		background: var(--color-rust-1-20);
+		transform: scale(0.5);
+		transition:
+			transform var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+			background-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
+	}
+
+	.step-nav a.step-nav__dot--active::before {
+		transform: scale(1);
+		background: var(--color-rust-1);
+	}
+
+	.step-nav a:hover,
+	.step-nav a:focus-visible {
+		color: var(--color-hover);
+	}
+
+	.step-nav a.step-nav__dot:hover::before,
+	.step-nav a.step-nav__dot:focus-visible::before {
+		background-color: var(--color-hover);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.step-nav a.step-nav__label,
+		.step-nav a.step-nav__btn,
+		.step-nav a.step-nav__dot::before {
+			transition: none;
+		}
+	}
+</style>

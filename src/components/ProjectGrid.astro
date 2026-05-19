@@ -1,0 +1,46 @@
+---
+import ProjectCard from "./ProjectCard.astro";
+import { projects } from "../data/projects";
+---
+
+<section class="project-grid" aria-label="Projects">
+	{
+		projects.map((project, index) => (
+			<ProjectCard
+				title={project.title}
+				href={`/projects/${project.slug}`}
+				thumbnail={project.thumbnail}
+				eagerLoad={index < 4}
+			/>
+		))
+	}
+</section>
+
+<style>
+	.project-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 64px 16px;
+		align-items: start;
+		width: 100%;
+	}
+
+	@media (max-width: 1040px) {
+		.project-grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 720px) {
+		.project-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: 48px 16px;
+		}
+	}
+
+	@media (max-width: 480px) {
+		.project-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>
