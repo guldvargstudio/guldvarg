@@ -36,7 +36,7 @@ const {
 				Home
 			</a>
 
-			<div class="step-nav__dots">
+			<div class="step-nav__dots" data-dot-count={dotCount}>
 				{projects.map((project, index) => (
 					<a
 						class:list={[
@@ -44,6 +44,7 @@ const {
 							{ "step-nav__dot--active": activeDotIndex === index },
 						]}
 						href={`/projects/${project.slug}`}
+						data-dot-index={index}
 						aria-label={project.title}
 						aria-current={activeDotIndex === index ? "page" : undefined}
 					/>
@@ -104,13 +105,22 @@ const {
 	.step-nav__center {
 		display: flex;
 		align-items: center;
-		gap: 24px;
+		min-width: 0;
+		gap: 32px;
 	}
 
 	.step-nav__dots {
 		display: flex;
 		align-items: center;
-		gap: 24px;
+		min-width: 0;
+		gap: 32px;
+	}
+
+	@media (max-width: 1040px) {
+		.step-nav__center,
+		.step-nav__dots {
+			gap: 24px;
+		}
 	}
 
 	@media (max-width: 768px) {
@@ -118,6 +128,18 @@ const {
 		.step-nav__dots {
 			gap: 16px;
 		}
+	}
+
+	.step-nav--compact .step-nav__center {
+		flex: 1;
+		justify-content: center;
+		gap: 8px;
+	}
+
+	.step-nav--compact .step-nav__dots {
+		flex-shrink: 1;
+		gap: 8px;
+		overflow: hidden;
 	}
 </style>
 
@@ -179,9 +201,85 @@ const {
 		background-color: var(--color-hover);
 	}
 
+	.step-nav--compact a.step-nav__dot {
+		width: 16px;
+		height: 16px;
+		overflow: hidden;
+		transition:
+			width var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+			height var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+			opacity var(--step-nav-transition-duration) var(--step-nav-transition-easing);
+	}
+
+	.step-nav--compact a.step-nav__dot::before {
+		width: 16px;
+		height: 16px;
+		transform: scale(var(--dot-scale, 0.5));
+		transition:
+			transform var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+			opacity var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+			background-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
+	}
+
+	.step-nav--compact a.step-nav__dot--active {
+		width: 16px;
+		height: 16px;
+		opacity: 1;
+	}
+
+	.step-nav--compact a.step-nav__dot--active::before {
+		--dot-scale: 1;
+		transform: scale(1);
+		background: var(--color-rust-1);
+	}
+
+	.step-nav--compact a.step-nav__dot--s8 {
+		width: 8px;
+		height: 8px;
+		opacity: 1;
+	}
+
+	.step-nav--compact a.step-nav__dot--s8::before {
+		--dot-scale: 0.5;
+	}
+
+	.step-nav--compact a.step-nav__dot--s6 {
+		width: 6px;
+		height: 6px;
+		opacity: 1;
+	}
+
+	.step-nav--compact a.step-nav__dot--s6::before {
+		--dot-scale: 0.375;
+	}
+
+	.step-nav--compact a.step-nav__dot--s4 {
+		width: 4px;
+		height: 4px;
+		opacity: 1;
+	}
+
+	.step-nav--compact a.step-nav__dot--s4::before {
+		--dot-scale: 0.25;
+	}
+
+	.step-nav--compact a.step-nav__dot--hidden {
+		width: 0;
+		height: 0;
+		min-width: 0;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.step-nav--compact a.step-nav__dot--hidden::before {
+		--dot-scale: 0;
+		opacity: 0;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.step-nav a.step-nav__label,
 		.step-nav a.step-nav__btn,
+		.step-nav a.step-nav__dot,
 		.step-nav a.step-nav__dot::before {
 			transition: none;
 		}

@@ -33,6 +33,7 @@ export type ProjectMeta = {
 	background?: string;
 	sectionOrder?: number[];
 	sectionColumns?: Partial<Record<number, GridColumns>>;
+	showOnHome?: boolean;
 };
 
 const defaultBackground =
@@ -66,9 +67,8 @@ export const projects: ProjectMeta[] = [
 			text: "This game won't let me sleep anymore. Being hunted constantly. We have to shut the shit down!",
 			by: "Fille, Developer, IMGNRY",
 		},
-		tags: ["Rebranding", "UI / UX", "Design system", "Web", "iOS", "Android"],
-		background: bg("#cbd2c6"),
-		sectionOrder: [1, 5, 2, 6, 7, 3, 4, 9],
+		tags: ["Rebranding", "Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android"],
+		background: bg("#D3D9CF"),
 	},
 	{
 		slug: "siggesta",
@@ -82,8 +82,8 @@ export const projects: ProjectMeta[] = [
 			text: "This game won't let me sleep anymore. Being hunted constantly. We have to shut the shit down!",
 			by: "Fille, Developer, IMGNRY",
 		},
-		tags: ["UI / UX", "CMS", "HTML & CSS", "Webflow"],
-		background: bg("#e5e1d8"),
+		tags: ["Art Direction", "UI / UX", "CMS", "HTML & CSS", "Webflow"],
+		background: bg("#EBE7E0"),
 	},
 	{
 		slug: "mostwanted",
@@ -98,7 +98,7 @@ export const projects: ProjectMeta[] = [
 			by: "Fille, Developer, IMGNRY",
 		},
 		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS"],
-		background: bg("#f4e2bd"),
+		background: bg("#F7E7CA"),
 	},
 	{
 		slug: "picular",
@@ -142,9 +142,8 @@ export const projects: ProjectMeta[] = [
 			text: "Kristofer was given the project scope to establish a new design system for Halebop and ended up not only delivering above and beyond the original scope, but he also became a core contributor in the Halebop team. His approach was refreshing and integral to where Halebop is today.",
 			by: "Emma Craig, Head of halebop",
 		},
-		tags: ["UI / UX", "Design system", "Web", "iOS", "Android", "User testing"],
-		background: bg("#d7efe9"),
-		sectionOrder: [1, 2, 3, 5, 6, 4],
+		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User testing"],
+		background: bg("#E2F3EF"),
 	},
 	{
 		slug: "soundtrack",
@@ -158,8 +157,8 @@ export const projects: ProjectMeta[] = [
 			text: "With an eye for detail and a comprehensive systematic approach to problem solving and design, Kristofer is a very valuable contributor to both product solutions and as a team player. His long experience is also reflected in his humble approach and very likeable personality.",
 			by: "Patrik Axelsson, VP Product, Soundtrack",
 		},
-		tags: ["UI / UX", "Design system", "Icons", "Cover art", "Web", "iOS", "Android", "User testing"],
-		background: bg("#e0e0e0"),
+		tags: ["Art Direction", "UI / UX", "Design system", "Icons", "Cover art", "Web", "iOS", "Android", "User testing"],
+		background: bg("#D6D6D6"),
 	},
 	{
 		slug: "tui",
@@ -173,8 +172,8 @@ export const projects: ProjectMeta[] = [
 			text: "Kristofer is one of a kind. Wise, experienced and at the same time all-seeing and curious. With integrity and laser precision, he always delivers beyond expectations.",
 			by: "Martin Collsiöö, UX Lead, TUI",
 		},
-		tags: ["UI / UX", "Design system", "Web", "Email / crm"],
-		background: bg("#70cbf4"),
+		tags: ["UI / UX", "Art Direction", "Design system", "Web", "Email / crm"],
+		background: bg("#89D4F6"),
 	},
 	{
 		slug: "cocktailcruise",
@@ -203,8 +202,8 @@ export const projects: ProjectMeta[] = [
 			text: "Kristofer is always full of creative ideas and positive energy. He creates awesome designs and user flows, seeks and listen to feedback. He's really good to sell and explain his ideas and show how they fit in the bigger picture.",
 			by: "Kristina Trossmo, Agile Coach, Com Hem",
 		},
-		tags: ["Rebranding", "UI / UX", "Design system", "Web"],
-		background: bg("#e6ebe6"),
+		tags: ["Rebranding", "Art Direction", "UI / UX", "Design system", "Web"],
+		background: bg("#D4DDD4"),
 	},
 	{
 		slug: "holy",
@@ -219,7 +218,7 @@ export const projects: ProjectMeta[] = [
 			by: "Chris Priestman, Pocket Gamer",
 		},
 		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS"],
-		background: bg("#c8eefc"),
+		background: bg("#D8F3FD"),
 	},
 	{
 		slug: "nordea",
@@ -233,7 +232,7 @@ export const projects: ProjectMeta[] = [
 			text: "It has been an excellent decision to work with IMGNRY as they have continuously delivered high quality on time. It's a pleasure to work with Kristofer and Fille - they always see solutions, not problems.",
 			by: "Rita Mansourati, Product Marketing Manager, Nordea Markets",
 		},
-		tags: ["UI / UX", "iOS", "Android", "Project management"],
+		tags: ["UI / UX", "Art Direction", "iOS", "Android", "Project management"],
 		background: bg("#f4f2ed"),
 	},
 	{
@@ -251,6 +250,7 @@ export const projects: ProjectMeta[] = [
 		tags: ["Game concept", "Art Direction", "SFX", "UI / UX", "Steam"],
 		background: bg("#fdf1d7"),
 		sectionColumns: { 1: "2-1", 2: "1-2" },
+		showOnHome: false,
 	},
 
 
@@ -259,6 +259,10 @@ export const projects: ProjectMeta[] = [
 ];
 
 export type ProjectListing = Pick<ProjectMeta, "slug" | "title" | "thumbnail">;
+
+export function getHomeProjects() {
+	return projects.filter((project) => project.showOnHome !== false);
+}
 
 export function getProjectBySlug(slug: string): ProjectMeta | undefined {
 	return projects.find((project) => project.slug === slug);

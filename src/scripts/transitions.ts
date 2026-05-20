@@ -4,7 +4,8 @@ import {
 	contentTransitionEasingCss,
 	pageBgTransitionMs,
 } from "../config/motion";
-import type { StepNavVisualState } from "../lib/stepNavState";
+import { readStepNavVisualState, type StepNavVisualState } from "../lib/stepNavState";
+import { commitStepNavState, syncStepNavLinks } from "./stepNav";
 import {
 	isTransitionBeforeSwapEvent,
 	TRANSITION_AFTER_SWAP,
@@ -435,52 +436,6 @@ function injectDirectionalSlide(newDocument: Document, direction: "prev" | "next
 	newDocument.head.appendChild(style);
 }
 
-function readVisualStateFromBody(body: HTMLElement): StepNavVisualState {
-	const { stepNavActive, stepNavDot } = body.dataset;
-
-	return {
-		active: (stepNavActive as StepNavVisualState["active"]) ?? "home",
-		activeDotIndex: stepNavDot === "" ? undefined : Number(stepNavDot),
-	};
-}
-
-function applyStepNavVisualState(state: StepNavVisualState) {
-	const nav = document.querySelector(".step-nav");
-	if (!nav) return;
-
-	const homeLabel = nav.querySelector('.step-nav__label[href="/"]');
-	const aboutLabel = nav.querySelector('.step-nav__label[href="/about"]');
-
-	if (homeLabel instanceof HTMLElement) {
-		homeLabel.classList.toggle("step-nav__label--active", state.active === "home");
-	}
-
-	if (aboutLabel instanceof HTMLElement) {
-		aboutLabel.classList.toggle("step-nav__label--active", state.active === "about");
-	}
-
-	nav.querySelectorAll(".step-nav__dot").forEach((dot, index) => {
-		dot.classList.toggle("step-nav__dot--active", state.activeDotIndex === index);
-	});
-}
-
-function syncStepNavLinks(body: HTMLElement) {
-	const nav = document.querySelector(".step-nav");
-	if (!nav) return;
-
-	const { stepNavPrev, stepNavNext } = body.dataset;
-	const prevBtn = nav.querySelector(".step-nav__btn:not(.step-nav__btn--next)");
-	const nextBtn = nav.querySelector(".step-nav__btn--next");
-
-	if (prevBtn instanceof HTMLAnchorElement && stepNavPrev) {
-		prevBtn.href = stepNavPrev;
-	}
-
-	if (nextBtn instanceof HTMLAnchorElement && stepNavNext) {
-		nextBtn.href = stepNavNext;
-	}
-}
-
 function applyPendingPageState() {
 	const navState = pendingNavVisualState;
 	const pageBgEnd = pendingPageBgEnd;
@@ -489,7 +444,7 @@ function applyPendingPageState() {
 
 	requestAnimationFrame(() => {
 		if (navState) {
-			applyStepNavVisualState(navState);
+			commitStepNavState(navState);
 		}
 
 		if (pageBgEnd) {
@@ -524,13 +479,13 @@ document.addEventListener(TRANSITION_BEFORE_SWAP, (event) => {
 
 	freezePageBgAtDisplayedColor("before-swap");
 
-	pendingNavVisualState = readVisualStateFromBody(event.newDocument.body);
+	pendingNavVisualState = readStepNavVisualState(event.newDocument);
 	pendingPageBgEnd = event.newDocument.body.dataset.pageBgEnd ?? null;
 	logPageBg("before-swap", {
 		pendingPageBgEnd,
 		bodyTarget: event.newDocument.body.dataset.pageBgEnd ?? null,
 	});
-	syncStepNavLinks(event.newDocument.body);
+	syncStepNavLinks(event.newDocument);
 
 	const direction = sessionStorage.getItem("nav-direction");
 	sessionStorage.removeItem("nav-direction");

@@ -40,11 +40,12 @@
 
 :root {
 	--color-dark: #2a1814;
+	--color-brown-1: #2a1814;
 	--color-gold: #ffc629;
 	--color-rust-1: #9e5900;
 	--color-rust-2: #6b3d00;
 	--color-green-2: #337500;
-	--color-hover: var(--color-green-2);
+	--color-hover: var(--color-brown-1);
 	--color-rust-1-20: rgba(158, 89, 0, 0.2);
 	--color-rust-1-60: rgba(158, 89, 0, 0.6);
 	--color-rust-1-10: rgba(158, 89, 0, 0.1);

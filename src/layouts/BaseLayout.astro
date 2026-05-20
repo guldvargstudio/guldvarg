@@ -53,16 +53,20 @@ const pageBgEnd = getPageBgEnd(pageBackground);
 		</style>
 		<ClientRouter fallback="swap" />
 		<script>
+			import "../scripts/stepNav.ts";
 			import "../scripts/transitions.ts";
 		</script>
 	</head>
-	<body
-		data-step-nav-active={active}
-		data-step-nav-prev={prevHref}
-		data-step-nav-next={nextHref}
-		data-step-nav-dot={activeDotIndex ?? ""}
-		data-page-bg-end={pageBgEnd}
-	>
+	<body data-page-bg-end={pageBgEnd}>
+		<div
+			id="step-nav-state"
+			hidden
+			aria-hidden="true"
+			data-step-nav-active={active}
+			data-step-nav-dot={activeDotIndex ?? ""}
+			data-step-nav-prev={prevHref}
+			data-step-nav-next={nextHref}
+		></div>
 		<div
 			id="page-bg-fill"
 			transition:persist="page-bg-fill"
