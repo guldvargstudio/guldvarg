@@ -1,20 +1,4 @@
 @font-face {
-	font-family: "Greycliff CF";
-	src: url("../assets/fonts/GreycliffCF-ExtraBold.woff2") format("woff2");
-	font-weight: 800;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: "Greycliff CF";
-	src: url("../assets/fonts/GreycliffCF-DemiBold.woff2") format("woff2");
-	font-weight: 600;
-	font-style: normal;
-	font-display: swap;
-}
-
-@font-face {
 	font-family: "Source Sans 3";
 	src: url("../assets/fonts/SourceSans3-VariableFont_wght.woff2") format("woff2");
 	font-weight: 300 900;
@@ -51,7 +35,7 @@
 	--color-rust-1-10: rgba(158, 89, 0, 0.1);
 	--color-beige-1: #fffaeb;
 	--color-beige-2: #f2ebd9;
-	--font-display: "Greycliff CF", "Arial Narrow", arial, sans-serif;
+	--font-display: "Roboto", arial, sans-serif;
 	--font-body: "Source Sans 3", arial, sans-serif;
 	--font-script: "Sauber Script", cursive;
 	--content-max-width: 1312px;
