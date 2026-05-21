@@ -23,13 +23,13 @@
 .project-gallery__grid {
 	display: grid;
 	grid-template-columns: repeat(var(--grid-cols, 1), minmax(0, 1fr));
-	gap: 16px;
+	gap: var(--project-gallery-grid-gap, 16px);
 	width: 100%;
 }
 
 .project-gallery__split {
 	display: grid;
-	gap: 16px;
+	gap: var(--project-gallery-grid-gap, 16px);
 	align-items: stretch;
 	width: 100%;
 }

@@ -45,6 +45,7 @@
 	--page-content-offset: 128px;
 	--page-section-gap: 128px;
 	--project-gallery-gap: 64px;
+	--project-gallery-grid-gap: 16px;
 	--page-gutter: var(--nav-padding-y);
 	--content-width: min(var(--content-max-width), calc(100% - (var(--page-gutter) * 2)));
 	--font-size-caps-sm: 12px;
@@ -222,12 +223,6 @@ a.project-card:focus-visible .project-card__title {
 	}
 }
 
-@media (max-width: 480px) {
-	.project-grid {
-		grid-template-columns: 1fr;
-	}
-}
-
 .home,
 .about,
 .project {
@@ -245,6 +240,7 @@ a.project-card:focus-visible .project-card__title {
 		--page-content-offset: 64px;
 		--page-section-gap: 64px;
 		--project-gallery-gap: 32px;
+		--project-gallery-grid-gap: 8px;
 	}
 }
 
