@@ -4,6 +4,8 @@ import {
 	contentTransitionEasingCss,
 	pageBgTransitionMs,
 } from "../config/motion";
+import { runAfterContentSlide as runAfterContentSlideBase } from "../lib/contentTransition";
+import { resolveNavDirection } from "../lib/stepNavDirection";
 import { readStepNavVisualState, type StepNavVisualState } from "../lib/stepNavState";
 import { commitStepNavState, syncStepNavLinks } from "./stepNav";
 import {
@@ -16,8 +18,6 @@ const DURATION = contentTransitionDurationCss;
 const EASING = contentTransitionEasingCss;
 const BEIGE_1 = "#fffaeb";
 const DEFAULT_PAGE_BG_END = "#f2ebd9";
-
-const SLIDE_IN_ANIMATION_NAMES = new Set(["slide-in-from-right", "slide-in-from-left"]);
 
 let pendingNavVisualState: StepNavVisualState | null = null;
 let pendingPageBgEnd: string | null = null;
@@ -197,67 +197,9 @@ function initPageBackground() {
 	});
 }
 
-function isSlideAnimationEvent(event: AnimationEvent) {
-	return typeof event.animationName === "string" && SLIDE_IN_ANIMATION_NAMES.has(event.animationName);
-}
-
-function waitForSlideEnd(task: () => void, reason: string) {
-	let settled = false;
-
-	const finish = (via: string) => {
-		if (settled) return;
-		settled = true;
-		document.removeEventListener("animationend", onAnimationEnd, true);
-		window.clearTimeout(fallbackTimer);
-		logPageBg("slide:end", { reason, via });
-		task();
-	};
-
-	const onAnimationEnd = (event: Event) => {
-		if (!(event instanceof AnimationEvent)) return;
-		if (!isSlideAnimationEvent(event)) return;
-		finish("animationend");
-	};
-
-	document.addEventListener("animationend", onAnimationEnd, true);
-	const fallbackTimer = window.setTimeout(
-		() => finish("timeout"),
-		contentTransitionDurationMs + 50,
-	);
-
-	void (async () => {
-		await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
-		const slideAnimations = getActiveSlideAnimations();
-		if (slideAnimations.length === 0) return;
-
-		logPageBg("wait:slide-animations", { reason, count: slideAnimations.length });
-		try {
-			await Promise.all(slideAnimations.map((animation) => animation.finished));
-			finish("getAnimations");
-		} catch {
-			logPageBg("slide-animations:aborted", { reason });
-		}
-	})();
-}
-
 function runAfterContentSlide(task: () => void, reason: string) {
 	logPageBg("wait:slide", { reason, delayMs: contentTransitionDurationMs });
-	waitForSlideEnd(task, reason);
-}
-
-function getActiveSlideAnimations() {
-	return document.getAnimations().filter((animation) => {
-		const name = getSlideAnimationName(animation);
-		return name !== null && SLIDE_IN_ANIMATION_NAMES.has(name);
-	});
-}
-
-function getSlideAnimationName(animation: Animation) {
-	if ("animationName" in animation && typeof animation.animationName === "string") {
-		return animation.animationName;
-	}
-
-	return null;
+	runAfterContentSlideBase(task);
 }
 
 function runWhenPageVisible(task: () => void, reason: string) {
@@ -444,7 +386,7 @@ function applyPendingPageState() {
 
 	requestAnimationFrame(() => {
 		if (navState) {
-			commitStepNavState(navState);
+			commitStepNavState(navState, true);
 		}
 
 		if (pageBgEnd) {
@@ -466,9 +408,9 @@ document.addEventListener(
 
 		freezePageBgAtDisplayedColor("click");
 
-		const navLink = target.closest("a[data-nav-direction]");
-		if (navLink instanceof HTMLAnchorElement) {
-			sessionStorage.setItem("nav-direction", navLink.dataset.navDirection ?? "next");
+		const direction = resolveNavDirection(link);
+		if (direction) {
+			sessionStorage.setItem("nav-direction", direction);
 		}
 	},
 	true,

@@ -1,10 +1,12 @@
 import { contentTransitionDurationMs } from "../config/motion";
 import {
-	getDotDistance,
-	getDotModifier,
-	STEP_NAV_COMPACT_MAX_WIDTH,
+	computeStepNavLayout,
+	computeVisibleDotWindow,
+	getNavPosition,
+	getWindowEdgeDotModifier,
 	STEP_NAV_DOT_MODIFIER_CLASSES,
-} from "../lib/stepNavCompact";
+	type StepNavLayout,
+} from "../lib/stepNavLayout";
 import {
 	readStepNavVisualState,
 	type StepNavVisualState,
@@ -20,14 +22,28 @@ function isInternalNavigationLink(link: HTMLAnchorElement) {
 	return url.origin === window.location.origin;
 }
 
-const compactQuery = window.matchMedia(`(max-width: ${STEP_NAV_COMPACT_MAX_WIDTH}px)`);
-
 let pendingStepNavState: StepNavVisualState | null = null;
 let stateObserver: MutationObserver | null = null;
+let resizeObserver: ResizeObserver | null = null;
 let lastAppliedStateKey = "";
+let lastLayoutKey = "";
 
-function stateKey(state: StepNavVisualState): string {
-	return `${state.active}:${state.activeDotIndex ?? ""}:${compactQuery.matches}`;
+function getProjectDotCount(nav: Element): number {
+	const dotsContainer = nav.querySelector(".step-nav__dots");
+
+	if (dotsContainer instanceof HTMLElement && dotsContainer.dataset.dotCount) {
+		const count = Number(dotsContainer.dataset.dotCount);
+		if (Number.isFinite(count)) return count;
+	}
+
+	return nav.querySelectorAll('.step-nav__dot:not(.step-nav__dot--endpoint)').length;
+}
+
+function getCenterWidth(nav: Element): number {
+	const inner = nav.querySelector(".step-nav__inner");
+	if (!(inner instanceof HTMLElement)) return 0;
+
+	return inner.clientWidth - 72 - 48;
 }
 
 function clearDotModifierClasses(dot: Element) {
@@ -36,50 +52,65 @@ function clearDotModifierClasses(dot: Element) {
 	}
 }
 
-export function updateStepNavCompact(state: StepNavVisualState) {
-	const nav = document.querySelector(".step-nav");
-	if (!nav) return;
+function applyStepNavLayout(nav: Element, state: StepNavVisualState, layout: StepNavLayout) {
+	const projectCount = getProjectDotCount(nav);
+	const activePosition = getNavPosition(state, projectCount);
+	const layoutKey = `${layout.mode}:${layout.gap}:${layout.compact}:${layout.maxVisible}:${activePosition}:${getCenterWidth(nav)}`;
+	if (layoutKey === lastLayoutKey) return;
+	lastLayoutKey = layoutKey;
 
-	const isCompact = compactQuery.matches;
+	const inner = nav.querySelector(".step-nav__inner");
+	if (inner instanceof HTMLElement) {
+		inner.style.setProperty("--step-nav-gap", `${layout.gap}px`);
+	}
 
-	nav.classList.toggle("step-nav--compact", isCompact);
+	nav.classList.toggle("step-nav--dots-only", layout.mode === "dots-only");
+	nav.classList.toggle("step-nav--compact", layout.compact);
 
 	const dots = nav.querySelectorAll(".step-nav__dot");
-	const dotCount = dots.length;
+	const totalDots = projectCount + 2;
+	const window = layout.compact
+		? computeVisibleDotWindow(activePosition, totalDots, layout.maxVisible)
+		: null;
 
-	dots.forEach((dot, index) => {
+	dots.forEach((dot) => {
 		clearDotModifierClasses(dot);
 
-		if (!isCompact) return;
+		if (!window) return;
 
-		if (dot.classList.contains("step-nav__dot--active")) return;
+		const navPosition = Number((dot as HTMLElement).dataset.navPosition);
+		if (!Number.isFinite(navPosition)) return;
 
-		const distance = getDotDistance(
-			index,
-			state.active,
-			state.activeDotIndex,
-			dotCount,
+		const modifier = getWindowEdgeDotModifier(
+			navPosition,
+			activePosition,
+			window,
+			totalDots,
 		);
 
-		dot.classList.add(getDotModifier(distance));
+		if (modifier) dot.classList.add(modifier);
 	});
-
-	if (!isCompact) return;
-
-	const dotsContainer = nav.querySelector(".step-nav__dots");
-	const activeDot = nav.querySelector(".step-nav__dot--active");
-
-	if (activeDot && dotsContainer instanceof HTMLElement) {
-		activeDot.scrollIntoView({ inline: "nearest", block: "nearest" });
-	}
 }
 
-export function applyStepNavVisualState(state: StepNavVisualState) {
+function updateStepNavLayout(nav: Element, state: StepNavVisualState) {
+	const projectCount = getProjectDotCount(nav);
+	const layout = computeStepNavLayout(getCenterWidth(nav), projectCount);
+	applyStepNavLayout(nav, state, layout);
+}
+
+function stateKey(state: StepNavVisualState): string {
+	return `${state.active}:${state.activeDotIndex ?? ""}`;
+}
+
+export function applyStepNavVisualState(state: StepNavVisualState, force = false) {
 	const nav = document.querySelector(".step-nav");
 	if (!nav) return;
 
 	const key = stateKey(state);
-	if (key === lastAppliedStateKey) return;
+	if (!force && key === lastAppliedStateKey) {
+		updateStepNavLayout(nav, state);
+		return;
+	}
 	lastAppliedStateKey = key;
 
 	const homeLabel = nav.querySelector('.step-nav__label[href="/"]');
@@ -93,9 +124,16 @@ export function applyStepNavVisualState(state: StepNavVisualState) {
 		aboutLabel.classList.toggle("step-nav__label--active", state.active === "about");
 	}
 
-	nav.querySelectorAll(".step-nav__dot").forEach((dot, index) => {
-		const isActive =
-			state.active === "project" && state.activeDotIndex === index;
+	const hidden = state.active === "home";
+	nav.classList.toggle("step-nav--home-hidden", hidden);
+	nav.setAttribute("aria-hidden", hidden ? "true" : "false");
+
+	const projectCount = getProjectDotCount(nav);
+	const activePosition = getNavPosition(state, projectCount);
+
+	nav.querySelectorAll(".step-nav__dot").forEach((dot) => {
+		const navPosition = Number((dot as HTMLElement).dataset.navPosition);
+		const isActive = Number.isFinite(navPosition) && navPosition === activePosition;
 
 		dot.classList.toggle("step-nav__dot--active", isActive);
 
@@ -106,7 +144,7 @@ export function applyStepNavVisualState(state: StepNavVisualState) {
 		}
 	});
 
-	updateStepNavCompact(state);
+	updateStepNavLayout(nav, state);
 }
 
 function setPendingStepNavState(state: StepNavVisualState) {
@@ -118,9 +156,11 @@ function resolveStepNavState(): StepNavVisualState {
 }
 
 export function commitStepNavState(override?: StepNavVisualState, force = false) {
-	if (force) lastAppliedStateKey = "";
-	const state = override ?? resolveStepNavState();
-	applyStepNavVisualState(state);
+	if (force) {
+		lastAppliedStateKey = "";
+		lastLayoutKey = "";
+	}
+	applyStepNavVisualState(override ?? resolveStepNavState(), force);
 }
 
 function scheduleStepNavCommits() {
@@ -128,12 +168,15 @@ function scheduleStepNavCommits() {
 
 	requestAnimationFrame(() => {
 		commitStepNavState();
-		requestAnimationFrame(commitStepNavState);
+		requestAnimationFrame(() => commitStepNavState());
 	});
 
 	window.setTimeout(commitStepNavState, 0);
 	window.setTimeout(commitStepNavState, 50);
-	window.setTimeout(() => commitStepNavState(undefined, true), contentTransitionDurationMs + 50);
+	window.setTimeout(
+		() => commitStepNavState(undefined, true),
+		contentTransitionDurationMs + 50,
+	);
 }
 
 export function syncStepNavFromDocument(doc: Document = document) {
@@ -179,11 +222,30 @@ function parseNavStateFromLink(link: HTMLAnchorElement, nav: Element): StepNavVi
 		return { active: "about" };
 	}
 
+	if (link.classList.contains("step-nav__dot")) {
+		const navPosition = Number(link.dataset.navPosition);
+		if (navPosition === 0) return { active: "home" };
+
+		const projectCount = getProjectDotCount(nav);
+		if (navPosition === projectCount + 1) return { active: "about" };
+
+		const index = Number(link.dataset.dotIndex);
+		if (Number.isFinite(index)) {
+			return { active: "project", activeDotIndex: index };
+		}
+	}
+
 	const dot = nav.querySelector<HTMLAnchorElement>(
 		`.step-nav__dot[href="${url.pathname}"], .step-nav__dot[href="${path}"], .step-nav__dot[href="${path}/"]`,
 	);
 
-	if (dot?.dataset.dotIndex !== undefined) {
+	if (dot) {
+		const navPosition = Number(dot.dataset.navPosition);
+		if (navPosition === 0) return { active: "home" };
+
+		const projectCount = getProjectDotCount(nav);
+		if (navPosition === projectCount + 1) return { active: "about" };
+
 		const index = Number(dot.dataset.dotIndex);
 		if (Number.isFinite(index)) {
 			return { active: "project", activeDotIndex: index };
@@ -202,6 +264,7 @@ function observeStepNavStateElement() {
 	stateObserver = new MutationObserver(() => {
 		pendingStepNavState = null;
 		lastAppliedStateKey = "";
+		lastLayoutKey = "";
 		commitStepNavState();
 	});
 
@@ -211,14 +274,26 @@ function observeStepNavStateElement() {
 	});
 }
 
-function initStepNav() {
-	commitStepNavState();
-	observeStepNavStateElement();
+function observeStepNavResize() {
+	resizeObserver?.disconnect();
 
-	compactQuery.addEventListener("change", () => {
-		lastAppliedStateKey = "";
-		commitStepNavState();
+	const inner = document.querySelector(".step-nav__inner");
+	if (!(inner instanceof HTMLElement)) return;
+
+	resizeObserver = new ResizeObserver(() => {
+		lastLayoutKey = "";
+		const nav = document.querySelector(".step-nav");
+		if (!nav) return;
+		updateStepNavLayout(nav, resolveStepNavState());
 	});
+
+	resizeObserver.observe(inner);
+}
+
+function initStepNav() {
+	commitStepNavState(undefined, true);
+	observeStepNavStateElement();
+	observeStepNavResize();
 }
 
 document.addEventListener(
@@ -238,7 +313,7 @@ document.addEventListener(
 		if (!nextState) return;
 
 		setPendingStepNavState(nextState);
-		applyStepNavVisualState(nextState);
+		applyStepNavVisualState(nextState, true);
 	},
 	true,
 );
@@ -254,17 +329,21 @@ document.addEventListener(TRANSITION_BEFORE_SWAP, (event) => {
 document.addEventListener(TRANSITION_AFTER_SWAP, () => {
 	pendingStepNavState = null;
 	lastAppliedStateKey = "";
+	lastLayoutKey = "";
 	syncStepNavLinks();
 	scheduleStepNavCommits();
 	observeStepNavStateElement();
+	observeStepNavResize();
 });
 
 document.addEventListener("astro:page-load", () => {
 	pendingStepNavState = null;
 	lastAppliedStateKey = "";
+	lastLayoutKey = "";
 	syncStepNavLinks();
-	scheduleStepNavCommits();
+	commitStepNavState(undefined, true);
 	observeStepNavStateElement();
+	observeStepNavResize();
 });
 
 initStepNav();

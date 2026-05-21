@@ -1,7 +1,8 @@
 ---
 import { ClientRouter, fade } from "astro:transitions";
-import "../styles/global.css";
 import StepNav from "../components/StepNav.astro";
+import stepNavStyles from "../components/StepNav.css?url";
+import globalStyles from "../styles/global.css?url";
 import {
 	contentTransitionDurationCss,
 	contentTransitionEasingCss,
@@ -49,6 +50,8 @@ const pageBgEnd = getPageBgEnd(pageBackground);
 			rel="stylesheet"
 		/>
 		<title>{title}</title>
+		<link rel="stylesheet" href={globalStyles} />
+		<link rel="stylesheet" href={stepNavStyles} />
 		<style is:global>
 			:root {
 				--page-bg-transition-duration: {pageBgTransitionCss};
@@ -85,13 +88,15 @@ const pageBgEnd = getPageBgEnd(pageBackground);
 			transition:animate="none"
 			aria-hidden="true"
 		></div>
-		<StepNav
-			active={active}
-			prevHref={prevHref}
-			nextHref={nextHref}
-			activeDotIndex={activeDotIndex}
-			dotCount={dotCount}
-		/>
+		<header class="site-header">
+			<StepNav
+				active={active}
+				prevHref={prevHref}
+				nextHref={nextHref}
+				activeDotIndex={activeDotIndex}
+				dotCount={dotCount}
+			/>
+		</header>
 		<div class="page">
 			<main
 				transition:name="main"

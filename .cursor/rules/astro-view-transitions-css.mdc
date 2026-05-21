@@ -1,0 +1,52 @@
+---
+description: CSS + View Transitions — styles must survive client-side navigation
+globs: src/**/*.astro,src/**/*.css
+alwaysApply: true
+---
+
+# Guldvarg — CSS with View Transitions
+
+Site uses `<ClientRouter />`. Styles often work on hard refresh but **break after client-side navigation**.
+
+## Root causes
+
+1. **Scoped `<style>`** uses `[data-astro-cid-*]` selectors that may not match DOM after a swap.
+2. **Plain `import "./X.css"` in a page** — Astro/Vite may **inline** small files as `<style>` tags. ClientRouter reliably re-injects `<link rel="stylesheet">` but **not** inlined `<style>` blocks.
+
+## Do
+
+1. Co-locate styles in `Component.css` next to the component (plain global CSS).
+2. Aggregate route styles in `src/styles/pages/<route>.css` if needed.
+3. **Load route CSS as an external stylesheet** from the page:
+
+```astro
+// src/pages/index.astro
+import homeStyles from "../styles/pages/home.css?url";
+---
+<link rel="stylesheet" href={homeStyles} />
+```
+
+4. Keep components markup-only — no CSS imports, no scoped `<style>`.
+5. Use `global.css` only for tokens, shared layout shells, and cross-route UI (StepNav, project grid).
+
+## Don't
+
+- Don't use default scoped `<style>` for post-navigation UI.
+- Don't rely on `import "../components/Foo.css"` alone — it may inline and break on client nav.
+- Don't import page CSS only from nested components.
+
+## Checklist
+
+- [ ] Hard refresh — styles OK?
+- [ ] Navigate away and back — styles still OK?
+- [ ] Route CSS loaded via `<link rel="stylesheet" href={…?url}>`?
+
+## Examples
+
+| UI | CSS | Wired from |
+|----|-----|------------|
+| Home page | `styles/pages/home.css` | `index.astro` → `?url` + `<link>` |
+| Project page | `styles/pages/project.css` | `projects/[slug].astro` → `?url` + `<link>` |
+| About / project separator | `MainSeparator.css` | page bundle or `?url` + `<link>` |
+| Global tokens + layout | `styles/global.css` | `BaseLayout.astro` → `?url` + `<link>` |
+| StepNav (persisted) | `StepNav.css` | `BaseLayout.astro` → `?url` + `<link>` |

@@ -25,7 +25,7 @@
 :root {
 	--color-dark: #2a1814;
 	--color-brown-1: #2a1814;
-	--color-gold: #ffc629;
+	--color-yellow: #ffc629;
 	--color-rust-1: #9e5900;
 	--color-rust-2: #6b3d00;
 	--color-green-2: #337500;
@@ -40,6 +40,11 @@
 	--font-script: "Sauber Script", cursive;
 	--content-max-width: 1312px;
 	--nav-padding-y: 40px;
+	--step-nav-inner-height: 36px;
+	--step-nav-height: calc(var(--nav-padding-y) * 2 + var(--step-nav-inner-height));
+	--page-content-offset: 128px;
+	--page-section-gap: 128px;
+	--project-gallery-gap: 64px;
 	--page-gutter: var(--nav-padding-y);
 	--content-width: min(var(--content-max-width), calc(100% - (var(--page-gutter) * 2)));
 	--font-size-caps-sm: 12px;
@@ -53,7 +58,9 @@
 	--font-size-source-3: 16px;
 	--step-nav-transition-duration: 0.4s;
 	--step-nav-transition-easing: ease;
-	--transition-interactive: color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
+	--transition-interactive:
+		color var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+		border-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
 }
 
 *,
@@ -111,10 +118,14 @@ body {
 	color: var(--color-dark);
 }
 
-.step-nav,
 .page {
 	position: relative;
 	z-index: 2;
+}
+
+.site-header {
+	min-height: var(--step-nav-height);
+	overflow: hidden;
 }
 
 @keyframes slide-out-to-left {
@@ -189,16 +200,56 @@ a.project-card:focus-visible .project-card__title {
 	color: var(--color-hover);
 }
 
+.project-grid {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 64px 16px;
+	align-items: start;
+	width: 100%;
+	align-self: stretch;
+}
+
+@media (max-width: 1040px) {
+	.project-grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 720px) {
+	.project-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 48px 16px;
+	}
+}
+
+@media (max-width: 480px) {
+	.project-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
 .home,
 .about,
 .project {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 128px;
+	gap: var(--page-section-gap);
 	width: var(--content-width);
 	margin: 0 auto;
-	padding: 128px 0;
+	padding: var(--page-content-offset) 0;
+}
+
+@media (max-width: 1040px) {
+	:root {
+		--page-content-offset: 64px;
+		--page-section-gap: 64px;
+		--project-gallery-gap: 32px;
+	}
+}
+
+.home {
+	padding-top: max(0px, calc(var(--page-content-offset) - var(--step-nav-height)));
 }
 
 @media (max-width: 768px) {

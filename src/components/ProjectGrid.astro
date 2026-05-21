@@ -5,7 +5,7 @@ import { getHomeProjects } from "../data/projects";
 const projects = getHomeProjects();
 ---
 
-<section class="project-grid" aria-label="Projects">
+<section class="project-grid" aria-label="Selected work">
 	{
 		projects.map((project, index) => (
 			<ProjectCard
@@ -17,32 +17,3 @@ const projects = getHomeProjects();
 		))
 	}
 </section>
-
-<style>
-	.project-grid {
-		display: grid;
-		grid-template-columns: repeat(4, minmax(0, 1fr));
-		gap: 64px 16px;
-		align-items: start;
-		width: 100%;
-	}
-
-	@media (max-width: 1040px) {
-		.project-grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
-	}
-
-	@media (max-width: 720px) {
-		.project-grid {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
-			gap: 48px 16px;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.project-grid {
-			grid-template-columns: 1fr;
-		}
-	}
-</style>

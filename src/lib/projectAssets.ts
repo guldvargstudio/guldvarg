@@ -2,6 +2,11 @@ import type { ImageMetadata } from "astro";
 
 export type GridColumns = "equal" | "2-1" | "1-2";
 
+export type SectionGroup = {
+	files: string[];
+	columns?: GridColumns;
+};
+
 export type ProjectSection =
 	| { type: "single"; id: number; image: ImageMetadata }
 	| { type: "grid"; id: number; images: ImageMetadata[]; columns?: GridColumns };
@@ -42,10 +47,15 @@ function parseImagePath(path: string): Omit<ParsedFile, "image"> | null {
 	return null;
 }
 
+function fileKey(file: Omit<ParsedFile, "image">) {
+	return file.suffix ? `${file.section}${file.suffix}` : String(file.section);
+}
+
 export function parseProjectImages(
 	slug: string,
 	sectionOrder?: number[],
 	sectionColumns?: Partial<Record<number, GridColumns>>,
+	sectionGroups?: SectionGroup[],
 ): ProjectSection[] {
 	const files: ParsedFile[] = [];
 
@@ -56,6 +66,36 @@ export function parseProjectImages(
 		if (!parsed) continue;
 
 		files.push({ ...parsed, image: module.default });
+	}
+
+	if (sectionGroups) {
+		const byKey = new Map(files.map((file) => [fileKey(file), file.image]));
+
+		return sectionGroups.flatMap((group, index) => {
+			const images = group.files
+				.map((key) => byKey.get(key))
+				.filter((image): image is ImageMetadata => image !== undefined);
+
+			if (images.length === 0) return [];
+
+			const id = index + 1;
+
+			if (images.length === 1) {
+				return [{ type: "single", id, image: images[0] } satisfies ProjectSection];
+			}
+
+			const columns =
+				images.length === 2 ? (group.columns ?? "equal") : "equal";
+
+			return [
+				{
+					type: "grid",
+					id,
+					images,
+					columns,
+				} satisfies ProjectSection,
+			];
+		});
 	}
 
 	const grouped = new Map<number, ParsedFile[]>();

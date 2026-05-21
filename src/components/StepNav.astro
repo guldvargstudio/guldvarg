@@ -18,8 +18,14 @@ const {
 } = Astro.props;
 ---
 
-<nav class="step-nav" transition:persist transition:animate="none" aria-label="Site navigation">
-	<div class="step-nav__inner">
+<nav
+	class:list={["step-nav", { "step-nav--home-hidden": active === "home" }]}
+	transition:persist
+	transition:animate="none"
+	aria-label="Site navigation"
+	aria-hidden={active === "home" ? "true" : "false"}
+>
+	<div class="step-nav__inner" style={`--step-nav-dot-count: ${dotCount}`}>
 		<a class="step-nav__btn" href={prevHref} aria-label="Previous" data-nav-direction="prev">
 			<svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden="true">
 				<path
@@ -37,6 +43,19 @@ const {
 			</a>
 
 			<div class="step-nav__dots" data-dot-count={dotCount}>
+				<a
+					class:list={[
+						"step-nav__dot",
+						"step-nav__dot--endpoint",
+						"step-nav__dot--home",
+						{ "step-nav__dot--active": active === "home" },
+					]}
+					href="/"
+					data-nav-position="0"
+					data-dot-index=""
+					aria-label="Home"
+					aria-current={active === "home" ? "page" : undefined}
+				/>
 				{projects.map((project, index) => (
 					<a
 						class:list={[
@@ -44,11 +63,25 @@ const {
 							{ "step-nav__dot--active": activeDotIndex === index },
 						]}
 						href={`/projects/${project.slug}`}
+						data-nav-position={index + 1}
 						data-dot-index={index}
 						aria-label={project.title}
 						aria-current={activeDotIndex === index ? "page" : undefined}
 					/>
 				))}
+				<a
+					class:list={[
+						"step-nav__dot",
+						"step-nav__dot--endpoint",
+						"step-nav__dot--about",
+						{ "step-nav__dot--active": active === "about" },
+					]}
+					href="/about"
+					data-nav-position={dotCount + 1}
+					data-dot-index=""
+					aria-label="About"
+					aria-current={active === "about" ? "page" : undefined}
+				/>
 			</div>
 
 			<a
@@ -73,215 +106,3 @@ const {
 		</a>
 	</div>
 </nav>
-
-<style>
-	.step-nav {
-		position: relative;
-		z-index: 2;
-		width: 100%;
-		padding: var(--nav-padding-y) 0;
-	}
-
-	.step-nav__inner {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: var(--content-width);
-		height: 36px;
-		margin: 0 auto;
-	}
-
-	.step-nav__btn {
-		display: flex;
-		flex-shrink: 0;
-		width: 36px;
-		height: 36px;
-	}
-
-	.step-nav__btn--next {
-		transform: rotate(180deg);
-	}
-
-	.step-nav__center {
-		display: flex;
-		align-items: center;
-		min-width: 0;
-		gap: 32px;
-	}
-
-	.step-nav__dots {
-		display: flex;
-		align-items: center;
-		min-width: 0;
-		gap: 32px;
-	}
-
-	@media (max-width: 1040px) {
-		.step-nav__center,
-		.step-nav__dots {
-			gap: 24px;
-		}
-	}
-
-	@media (max-width: 768px) {
-		.step-nav__center,
-		.step-nav__dots {
-			gap: 16px;
-		}
-	}
-
-	.step-nav--compact .step-nav__center {
-		flex: 1;
-		justify-content: center;
-		gap: 8px;
-	}
-
-	.step-nav--compact .step-nav__dots {
-		flex-shrink: 1;
-		gap: 8px;
-		overflow: hidden;
-	}
-</style>
-
-<style is:global>
-	.step-nav a.step-nav__label {
-		font-family: var(--font-display);
-		font-size: 14px;
-		font-weight: 800;
-		line-height: 1;
-		letter-spacing: 1.4px;
-		text-transform: uppercase;
-		color: var(--color-rust-1-20);
-		white-space: nowrap;
-		transition: var(--transition-interactive);
-	}
-
-	.step-nav a.step-nav__label.step-nav__label--active {
-		color: var(--color-rust-1);
-	}
-
-	.step-nav a.step-nav__btn {
-		color: var(--color-rust-1);
-		transition: var(--transition-interactive);
-	}
-
-	.step-nav a.step-nav__dot {
-		display: grid;
-		place-items: center;
-		flex-shrink: 0;
-		width: 16px;
-		height: 16px;
-	}
-
-	.step-nav a.step-nav__dot::before {
-		content: "";
-		display: block;
-		width: 16px;
-		height: 16px;
-		border-radius: 50%;
-		background: var(--color-rust-1-20);
-		transform: scale(0.5);
-		transition:
-			transform var(--step-nav-transition-duration) var(--step-nav-transition-easing),
-			background-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
-	}
-
-	.step-nav a.step-nav__dot--active::before {
-		transform: scale(1);
-		background: var(--color-rust-1);
-	}
-
-	.step-nav a:hover,
-	.step-nav a:focus-visible {
-		color: var(--color-hover);
-	}
-
-	.step-nav a.step-nav__dot:hover::before,
-	.step-nav a.step-nav__dot:focus-visible::before {
-		background-color: var(--color-hover);
-	}
-
-	.step-nav--compact a.step-nav__dot {
-		width: 16px;
-		height: 16px;
-		overflow: hidden;
-		transition:
-			width var(--step-nav-transition-duration) var(--step-nav-transition-easing),
-			height var(--step-nav-transition-duration) var(--step-nav-transition-easing),
-			opacity var(--step-nav-transition-duration) var(--step-nav-transition-easing);
-	}
-
-	.step-nav--compact a.step-nav__dot::before {
-		width: 16px;
-		height: 16px;
-		transform: scale(var(--dot-scale, 0.5));
-		transition:
-			transform var(--step-nav-transition-duration) var(--step-nav-transition-easing),
-			opacity var(--step-nav-transition-duration) var(--step-nav-transition-easing),
-			background-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
-	}
-
-	.step-nav--compact a.step-nav__dot--active {
-		width: 16px;
-		height: 16px;
-		opacity: 1;
-	}
-
-	.step-nav--compact a.step-nav__dot--active::before {
-		--dot-scale: 1;
-		transform: scale(1);
-		background: var(--color-rust-1);
-	}
-
-	.step-nav--compact a.step-nav__dot--s8 {
-		width: 8px;
-		height: 8px;
-		opacity: 1;
-	}
-
-	.step-nav--compact a.step-nav__dot--s8::before {
-		--dot-scale: 0.5;
-	}
-
-	.step-nav--compact a.step-nav__dot--s6 {
-		width: 6px;
-		height: 6px;
-		opacity: 1;
-	}
-
-	.step-nav--compact a.step-nav__dot--s6::before {
-		--dot-scale: 0.375;
-	}
-
-	.step-nav--compact a.step-nav__dot--s4 {
-		width: 4px;
-		height: 4px;
-		opacity: 1;
-	}
-
-	.step-nav--compact a.step-nav__dot--s4::before {
-		--dot-scale: 0.25;
-	}
-
-	.step-nav--compact a.step-nav__dot--hidden {
-		width: 0;
-		height: 0;
-		min-width: 0;
-		opacity: 0;
-		pointer-events: none;
-	}
-
-	.step-nav--compact a.step-nav__dot--hidden::before {
-		--dot-scale: 0;
-		opacity: 0;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.step-nav a.step-nav__label,
-		.step-nav a.step-nav__btn,
-		.step-nav a.step-nav__dot,
-		.step-nav a.step-nav__dot::before {
-			transition: none;
-		}
-	}
-</style>

@@ -1,16 +1,20 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import LogoSection from "../components/LogoSection.astro";
+import HomeHero from "../components/HomeHero.astro";
 import MainSeparator from "../components/MainSeparator.astro";
 import ProjectGrid from "../components/ProjectGrid.astro";
 import { getSiteNavigation } from "../data/projects";
 
+import homeStyles from "../styles/pages/home.css?url";
+
 const navigation = getSiteNavigation("home");
 ---
 
+<link rel="stylesheet" href={homeStyles} />
+
 <BaseLayout title="Guldvarg Studio" {...navigation}>
 	<div class="home">
-		<LogoSection />
+		<HomeHero selectedWorkHref={navigation.nextHref} />
 		<ProjectGrid />
 		<MainSeparator />
 	</div>

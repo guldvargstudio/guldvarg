@@ -1,10 +1,7 @@
 ---
 import { Image } from "astro:assets";
-import iconBluesky from "../assets/ui/icon-bluesky.svg";
-import iconEmail from "../assets/ui/icon-email.svg";
-import iconPhone from "../assets/ui/icon-phone.svg";
-import iconThreads from "../assets/ui/icon-threads.svg";
 import photo from "../assets/ui/photo-guldvarg.jpg";
+import UiIcon from "./UiIcon.astro";
 import {
 	backgroundText,
 	contactLinks,
@@ -13,11 +10,11 @@ import {
 	type ContactLink,
 } from "../data/about";
 
-const icons: Record<ContactLink["icon"], typeof iconEmail> = {
-	email: iconEmail,
-	phone: iconPhone,
-	bluesky: iconBluesky,
-	threads: iconThreads,
+const iconNames: Record<ContactLink["icon"], "email" | "phone" | "bluesky" | "threads"> = {
+	email: "email",
+	phone: "phone",
+	bluesky: "bluesky",
+	threads: "threads",
 };
 ---
 
@@ -36,11 +33,7 @@ const icons: Record<ContactLink["icon"], typeof iconEmail> = {
 								target={link.icon === "email" || link.icon === "phone" ? undefined : "_blank"}
 								rel={link.icon === "email" || link.icon === "phone" ? undefined : "noopener noreferrer"}
 							>
-								<span
-									class="about-contact__icon"
-									style={`--icon-mask: url(${icons[link.icon].src})`}
-									aria-hidden="true"
-								></span>
+								<UiIcon name={iconNames[link.icon]} class="about-contact__icon" />
 								<span>{link.label}</span>
 							</a>
 						</li>
@@ -194,11 +187,6 @@ const icons: Record<ContactLink["icon"], typeof iconEmail> = {
 
 	.about-contact__icon {
 		flex-shrink: 0;
-		width: 20px;
-		height: 20px;
-		background-color: currentColor;
-		-webkit-mask: var(--icon-mask) center / contain no-repeat;
-		mask: var(--icon-mask) center / contain no-repeat;
 	}
 
 	.about-photo {

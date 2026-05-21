@@ -4,8 +4,12 @@ import MainSeparator from "../components/MainSeparator.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getSiteNavigation } from "../data/projects";
 
+import mainSeparatorStyles from "../components/MainSeparator.css?url";
+
 const navigation = getSiteNavigation("about");
 ---
+
+<link rel="stylesheet" href={mainSeparatorStyles} />
 
 <BaseLayout title="About — Guldvarg Studio" {...navigation}>
 	<div class="about">

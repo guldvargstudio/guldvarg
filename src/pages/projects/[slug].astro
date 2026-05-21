@@ -6,6 +6,8 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getProjectBySlug, getSiteNavigation, projects } from "../../data/projects";
 import { parseProjectImages } from "../../lib/projectAssets";
 
+import projectStyles from "../../styles/pages/project.css?url";
+
 export function getStaticPaths() {
 	return projects.map((project) => ({
 		params: { slug: project.slug },
@@ -24,8 +26,11 @@ const sections = parseProjectImages(
 	project.slug,
 	project.sectionOrder,
 	project.sectionColumns,
+	project.sectionGroups,
 );
 ---
+
+<link rel="stylesheet" href={projectStyles} />
 
 <BaseLayout
 	title={`${project.title} — Guldvarg Studio`}

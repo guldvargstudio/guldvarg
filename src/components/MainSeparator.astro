@@ -7,28 +7,3 @@ import diamond from "../assets/ui/separator-diamond.svg";
 	<img class="main-separator__diamond" src={diamond.src} alt="" width="8" height="8" />
 	<span class="main-separator__line"></span>
 </div>
-
-<style>
-	.main-separator {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 16px;
-		width: 100%;
-		max-width: 552px;
-	}
-
-	.main-separator__line {
-		flex: 1 1 0;
-		max-width: 256px;
-		height: 2px;
-		border-radius: 999px;
-		background: var(--color-rust-1-20);
-	}
-
-	.main-separator__diamond {
-		flex-shrink: 0;
-		width: 8px;
-		height: 8px;
-	}
-</style>

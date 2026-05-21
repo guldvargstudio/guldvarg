@@ -1,6 +1,6 @@
 import type { ImageMetadata } from "astro";
 
-import type { GridColumns } from "../lib/projectAssets";
+import type { GridColumns, SectionGroup } from "../lib/projectAssets";
 
 import cocktailcruiseThumb from "../assets/projects/cocktailcruise/p-cocktailcruise-thumbnail.png";
 import comhemThumb from "../assets/projects/comhem/p-comhem-thumbnail.png";
@@ -33,6 +33,7 @@ export type ProjectMeta = {
 	background?: string;
 	sectionOrder?: number[];
 	sectionColumns?: Partial<Record<number, GridColumns>>;
+	sectionGroups?: SectionGroup[];
 	showOnHome?: boolean;
 };
 
@@ -62,7 +63,7 @@ export const projects: ProjectMeta[] = [
 		years: "2025 - today",
 		role: "UX / UI designer",
 		intro:
-			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\n\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
+			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
 		quote: {
 			text: "This game won't let me sleep anymore. Being hunted constantly. We have to shut the shit down!",
 			by: "Fille, Developer, IMGNRY",
@@ -77,10 +78,10 @@ export const projects: ProjectMeta[] = [
 		years: "2023 - today",
 		role: "UX / UI designer & webflow developer",
 		intro:
-			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\n\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
+			"One of Stockholm's most established countryside destinations, bringing together accommodation, restaurants, conferences, activities, and events into a unified hospitality experience.\nI designed and developed the complete website in Webflow, including a flexible CMS setup built to support a large and continuously changing content ecosystem.",
 		quote: {
-			text: "This game won't let me sleep anymore. Being hunted constantly. We have to shut the shit down!",
-			by: "Fille, Developer, IMGNRY",
+			text: "Kristofer is responsible for Siggesta Gård's website — from design and development to ongoing maintenance. He is detail-oriented, proactive, and solution-driven, with a genuine eye for design. Kristofer is not afraid to challenge and improve existing ideas, and it clearly shows in the final result.",
+			by: "Lisa Guldvarg, Marketing Director, Siggesta Gård",
 		},
 		tags: ["Art Direction", "UI / UX", "CMS", "HTML & CSS", "Webflow"],
 		background: bg("#EBE7E0"),
@@ -182,7 +183,7 @@ export const projects: ProjectMeta[] = [
 		years: "2022 - 2023",
 		role: "Co-founder & designer",
 		intro:
-			"Capture the flag in a vibrant neon arcade '80s atmosphere. Originally released for iOS, the game turned your iPad into the game board while you and your friends controlled your ships with iPhones. Up to 8 players could join for total mayhem.\n\nWe later started developing a more polished version for Steam, but unfortunately it was never released.",
+			"Capture the flag in a vibrant neon arcade '80s atmosphere. Originally released for iOS, the game turned your iPad into the game board while you and your friends controlled your ships with iPhones. Up to 8 players could join for total mayhem.\nWe later started developing a more polished version for Steam, but unfortunately it was never released.",
 		quote: {
 			text: "⭐️⭐️⭐️⭐️⭐️\nVery underrated game! There are not many apps like this one on the App Store 👌. This game was definitely very ahead of its time. The concept, and design goes hand in hand with its awesome sound tracks as well.",
 			by: "Oreoninja22, Random customer, Apple App Store",
@@ -212,7 +213,7 @@ export const projects: ProjectMeta[] = [
 		years: "2012 - 2014",
 		role: "Co-Founder & designer",
 		intro:
-			"Let there be light — and there was light. Holy Handgrenade was a quirky iOS game where players competed in once-a-day reaction battles, trying to outlast a global leaderboard in chaotic last-man-standing tournaments.\n\nThe game was available on the app store for several years before ultimately coming to an end alongside the closing chapter of IMGNRY.",
+			"Let there be light — and there was light. Holy Handgrenade was a quirky iOS game where players competed in once-a-day reaction battles, trying to outlast a global leaderboard in chaotic last-man-standing tournaments.\nThe game was available on the app store for several years before ultimately coming to an end alongside the closing chapter of IMGNRY.",
 		quote: {
 			text: "The Holy Hand Grenade distils competitive gaming into a short and sharp single game experience.",
 			by: "Chris Priestman, Pocket Gamer",
@@ -249,7 +250,11 @@ export const projects: ProjectMeta[] = [
 		},
 		tags: ["Game concept", "Art Direction", "SFX", "UI / UX", "Steam"],
 		background: bg("#fdf1d7"),
-		sectionColumns: { 1: "2-1", 2: "1-2" },
+		sectionGroups: [
+			{ files: ["1a"] },
+			{ files: ["1b", "2a"], columns: "equal" },
+			{ files: ["2b"] },
+		],
 		showOnHome: false,
 	},
 
