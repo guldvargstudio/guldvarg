@@ -1,5 +1,6 @@
 ---
 import logo from "../assets/ui/logo-guldvarg.svg";
+import ContactEmailLink from "./ContactEmailLink.astro";
 import UiIcon from "./UiIcon.astro";
 import { contactLinks } from "../data/about";
 
@@ -9,7 +10,6 @@ interface Props {
 
 const { selectedWorkHref } = Astro.props;
 
-const email = contactLinks.find((link) => link.icon === "email");
 const phone = contactLinks.find((link) => link.icon === "phone");
 ---
 
@@ -25,14 +25,9 @@ const phone = contactLinks.find((link) => link.icon === "phone");
 	/>
 
 	<div class="home-hero__actions">
-		{
-			email && (
-				<a class="home-hero__link home-hero__link--outline" href={email.href}>
-					<UiIcon name="email" class="home-hero__icon" />
-					<span>{email.label}</span>
-				</a>
-			)
-		}
+		<ContactEmailLink class="home-hero__link home-hero__link--outline">
+			<UiIcon name="email" class="home-hero__icon" />
+		</ContactEmailLink>
 		{
 			phone && (
 				<a class="home-hero__link home-hero__link--outline" href={phone.href}>

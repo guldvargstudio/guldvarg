@@ -7,15 +7,10 @@ type EducationEntry = {
 type ContactLink = {
 	label: string;
 	href: string;
-	icon: "email" | "phone" | "bluesky" | "threads";
+	icon: "phone" | "bluesky" | "threads";
 };
 
 export const contactLinks: ContactLink[] = [
-	{
-		icon: "email",
-		label: "Email",
-		href: "mailto:kristofer@guldvarg.com",
-	},
 	{
 		icon: "phone",
 		label: "+46 72 703 7878",

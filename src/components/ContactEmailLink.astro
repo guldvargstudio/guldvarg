@@ -1,0 +1,12 @@
+---
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<a class={className} href="#" data-contact-email>
+	<slot />
+	<span data-contact-email-label></span>
+</a>

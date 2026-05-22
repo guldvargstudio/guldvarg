@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import photo from "../assets/ui/photo-guldvarg.jpg";
+import ContactEmailLink from "./ContactEmailLink.astro";
 import UiIcon from "./UiIcon.astro";
 import { backgroundText, contactLinks, education, skillsText } from "../data/about";
 ---
@@ -11,14 +12,19 @@ import { backgroundText, contactLinks, education, skillsText } from "../data/abo
 			<h2 class="about-heading" id="about-contact-heading">Contact</h2>
 
 			<ul class="about-contact">
+				<li>
+					<ContactEmailLink class="about-contact__link">
+						<UiIcon name="email" class="about-contact__icon" />
+					</ContactEmailLink>
+				</li>
 				{
 					contactLinks.map((link) => (
 						<li>
 							<a
 								class="about-contact__link"
 								href={link.href}
-								target={link.icon === "email" || link.icon === "phone" ? undefined : "_blank"}
-								rel={link.icon === "email" || link.icon === "phone" ? undefined : "noopener noreferrer"}
+								target={link.icon === "phone" ? undefined : "_blank"}
+								rel={link.icon === "phone" ? undefined : "noopener noreferrer"}
 							>
 								<UiIcon name={link.icon} class="about-contact__icon" />
 								<span>{link.label}</span>
