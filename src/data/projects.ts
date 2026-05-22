@@ -60,12 +60,12 @@ export const projects: ProjectMeta[] = [
 		slug: "ohgarden",
 		title: "Oh!Garden",
 		thumbnail: ohgardenThumb,
-		years: "2025 - today",
+		years: "2025 - Ongoing",
 		role: "UX / UI designer",
 		intro:
 			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
 		quote: {
-			text: "",
+			text: "Kristofer is a highly skilled UX/UI designer with a strong combination of creativity, structure, and systematic thinking. He laid the foundation for our design system and significantly elevated both the team and the product.\nHe works very efficiently and consistently delivers solutions that exceed expectations — both through the quality of the details and the overall user experience.",
 			by: "Anna Dymling, Founder, Oh!Garden",
 		},
 		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User Interviews"],
@@ -75,7 +75,7 @@ export const projects: ProjectMeta[] = [
 		slug: "siggesta",
 		title: "Siggesta Gård",
 		thumbnail: siggestaThumb,
-		years: "2023 - today",
+		years: "2023 - Ongoing",
 		role: "UX / UI designer & webflow developer",
 		intro:
 			"One of Stockholm's most established countryside destinations, bringing together accommodation, restaurants, conferences, activities, and events into a unified hospitality experience.\nI designed and developed the complete website in Webflow, including a flexible CMS setup built to support a large and continuously changing content ecosystem.",
@@ -185,7 +185,7 @@ export const projects: ProjectMeta[] = [
 		intro:
 			"Capture the flag in a vibrant neon arcade '80s atmosphere. Originally released for iOS, the game turned your iPad into the game board while you and your friends controlled your ships with iPhones. Up to 8 players could join for total mayhem.\nWe later started developing a more polished version for Steam, but unfortunately it was never released.",
 		quote: {
-			text: "⭐️⭐️⭐️⭐️⭐️\nVery underrated game! There are not many apps like this one on the App Store 👌. This game was definitely very ahead of its time. The concept, and design goes hand in hand with its awesome sound tracks as well.",
+			text: "Very underrated game! There are not many apps like this one on the App Store 👌. This game was definitely very ahead of its time. The concept, and design goes hand in hand with its awesome sound tracks as well.",
 			by: "Oreoninja22, Random customer, Apple App Store",
 		},
 		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS", "Steam"],

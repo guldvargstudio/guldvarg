@@ -12,7 +12,7 @@ const navigation = getSiteNavigation("home");
 
 <link rel="stylesheet" href={homeStyles} />
 
-<BaseLayout title="Guldvarg Studio" {...navigation}>
+<BaseLayout title="Guldvarg Studio" canonicalPath="/" {...navigation}>
 	<div class="home">
 		<HomeHero selectedWorkHref={navigation.nextHref} />
 		<ProjectGrid />

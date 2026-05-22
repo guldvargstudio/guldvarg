@@ -1,5 +1,6 @@
 ---
 import { ClientRouter, fade } from "astro:transitions";
+import type { ImageMetadata } from "astro";
 import StepNav from "../components/StepNav.astro";
 import stepNavStyles from "../components/StepNav.css?url";
 import globalStyles from "../styles/global.css?url";
@@ -10,9 +11,21 @@ import {
 	pageBgTransitionCss,
 } from "../config/motion";
 import { defaultPageBackground, getPageBgEnd } from "../data/projects";
+import {
+	defaultSiteDescription,
+	getDefaultShareImage,
+	siteName,
+	toAbsoluteUrl,
+	toImageUrl,
+} from "../lib/socialMeta";
 
 interface Props {
 	title?: string;
+	description?: string;
+	image?: ImageMetadata;
+	imageAlt?: string;
+	canonicalPath?: string;
+	type?: "website" | "article";
 	active?: "home" | "about" | "project";
 	prevHref?: string;
 	nextHref?: string;
@@ -22,7 +35,12 @@ interface Props {
 }
 
 const {
-	title = "Guldvarg Studio",
+	title = siteName,
+	description = defaultSiteDescription,
+	image = getDefaultShareImage(),
+	imageAlt = siteName,
+	canonicalPath,
+	type = "website",
 	active = "home",
 	prevHref,
 	nextHref,
@@ -33,6 +51,8 @@ const {
 
 const pageBackground = background ?? defaultPageBackground;
 const pageBgEnd = getPageBgEnd(pageBackground);
+const canonicalURL = toAbsoluteUrl(canonicalPath ?? Astro.url.pathname, Astro.site!);
+const shareImageUrl = toImageUrl(image, Astro.site!);
 ---
 
 <!doctype html>
@@ -50,6 +70,29 @@ const pageBgEnd = getPageBgEnd(pageBackground);
 			rel="stylesheet"
 		/>
 		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalURL} />
+		<meta property="og:type" content={type} />
+		<meta property="og:site_name" content={siteName} />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={shareImageUrl} />
+		<meta property="og:image:alt" content={imageAlt} />
+		{
+			image.width && image.height && (
+				<>
+					<meta property="og:image:width" content={String(image.width)} />
+					<meta property="og:image:height" content={String(image.height)} />
+				</>
+			)
+		}
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={shareImageUrl} />
+		<meta name="twitter:image:alt" content={imageAlt} />
 		<link rel="stylesheet" href={globalStyles} />
 		<link rel="stylesheet" href={stepNavStyles} />
 		<style is:global>
