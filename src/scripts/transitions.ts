@@ -16,6 +16,7 @@ import {
 	pinFrozenPageBg,
 	schedulePageBgEnd,
 } from "../lib/pageBackground";
+import { storeNavDirection } from "../lib/slideNavigation";
 import { resolveNavDirection } from "../lib/stepNavDirection";
 import { readStepNavVisualState, type StepNavVisualState } from "../lib/stepNavState";
 import { commitStepNavState, syncStepNavLinks } from "./stepNav";
@@ -109,7 +110,7 @@ document.addEventListener(
 
 		const direction = resolveNavDirection(link);
 		if (direction) {
-			sessionStorage.setItem("nav-direction", direction);
+			storeNavDirection(direction);
 		}
 	},
 	true,
