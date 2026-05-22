@@ -13,7 +13,7 @@ type ContactLink = {
 export const contactLinks: ContactLink[] = [
 	{
 		icon: "email",
-		label: "kristofer@guldvarg.com",
+		label: "Email",
 		href: "mailto:kristofer@guldvarg.com",
 	},
 	{
