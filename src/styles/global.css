@@ -117,24 +117,28 @@ body {
 @keyframes slide-out-to-left {
 	to {
 		transform: translateX(-100%);
+		opacity: 0;
 	}
 }
 
 @keyframes slide-in-from-right {
 	from {
 		transform: translateX(100%);
+		opacity: 0;
 	}
 }
 
 @keyframes slide-out-to-right {
 	to {
 		transform: translateX(100%);
+		opacity: 0;
 	}
 }
 
 @keyframes slide-in-from-left {
 	from {
 		transform: translateX(-100%);
+		opacity: 0;
 	}
 }
 

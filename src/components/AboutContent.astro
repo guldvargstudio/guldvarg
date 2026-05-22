@@ -60,7 +60,9 @@ import { backgroundText, contactLinks, education, skillsText } from "../data/abo
 
 		<div class="about-block">
 			<h3 class="about-label">Background &amp; family</h3>
-			<p class="about-body">{backgroundText}</p>
+			<div class="about-body">
+				{backgroundText.map((paragraph) => <p>{paragraph}</p>)}
+			</div>
 		</div>
 	</section>
 

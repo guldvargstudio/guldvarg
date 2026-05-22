@@ -29,13 +29,16 @@ export const contactLinks: ContactLink[] = [
 ];
 
 export const skillsText = [
-	"I've specialized in UX, UI, design systems, and cohesive visual identities, always eager to learn and adapt. My long experience and broad knowledge allows me to contribute meaningfully in a collaborative and constantly evolving industry.",
-	"I'm a fluid user of all well-known UI/UX tools, and my current main tool I've come to master is Figma.",
-	"I speak Swedish & English.",
+	"I've specialized in UX, UI, design systems, and cohesive visual identities, with broad experience across both product design and development.",
+	"Over the years, I've worked across a wide range of digital projects and industries, giving me a strong ability to adapt, collaborate, and contribute strategically as well as creatively.",
+	"I'm highly proficient in modern UI/UX tools, with Figma being my primary tool of choice today.",
+	"I speak both Swedish and English fluently.",
 ];
 
-export const backgroundText =
-	"I was born in 1978 in Olso but soon moved to Luleå, where I spent my early childhood digging snow caves. Nowadays, I live in the archipelago, Ingarö, outside Stockholm, with my wife, three kids, and a cat. I value kindness, having fun, and science.";
+export const backgroundText = [
+	"I was born in Oslo, before moving to Luleå where I spent much of my childhood digging snow caves and exploring the outdoors.",
+	"Today, I live in the Stockholm archipelago, on Ingarö, together with my wife, three children, and our cat. I value kindness, having fun, and science.",
+];
 
 export const education: EducationEntry[] = [
 	{

@@ -66,19 +66,6 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 		background: projectBackground("#F7E7CA"),
 	},
 	{
-		slug: "picular",
-		title: "Picular",
-		years: "2014 - 2024",
-		intro:
-			"Picular was a deeply ambitious product vision: a next-generation photo organization platform created by a team of two. Competing against giants like Google, Apple, Adobe, and Microsoft may have sounded unrealistic — yet in several areas, the experience genuinely surpassed them. Available across Mac, PC, iOS, and Android, the project eventually came to an end when my co-founder lost faith in its future.",
-		quote: {
-			text: "Great tools for organizing and improving my database of thousands of photos over a long life. Fille and Kristofer have patiently answered every question.",
-			by: "Inger Kari Nerheim, Happy customer",
-		},
-		tags: ["Art Direction", "Concept", "Marketing", "UI / UX", "iOS", "Android", "Mac", "PC"],
-		background: projectBackground("#c8c3be"),
-	},
-	{
 		slug: "library",
 		title: "Kungliga Biblioteket",
 		years: "2023 - 2024",
@@ -90,6 +77,19 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 		},
 		tags: ["Art Direction", "UI / UX", "Design system", "Web", "User Interviews"],
 		background: projectBackground("#dceae5"),
+	},
+	{
+		slug: "picular",
+		title: "Picular",
+		years: "2014 - 2024",
+		intro:
+			"Picular was a deeply ambitious product vision: a next-generation photo organization platform created by a team of two. Competing against giants like Google, Apple, Adobe, and Microsoft may have sounded unrealistic — yet in several areas, the experience genuinely surpassed them. Available across Mac, PC, iOS, and Android, the project eventually came to an end when my co-founder lost faith in its future.",
+		quote: {
+			text: "Great tools for organizing and improving my database of thousands of photos over a long life. Fille and Kristofer have patiently answered every question.",
+			by: "Inger Kari Nerheim, Happy customer",
+		},
+		tags: ["Art Direction", "Concept", "Marketing", "UI / UX", "iOS", "Android", "Mac", "PC"],
+		background: projectBackground("#c8c3be"),
 	},
 	{
 		slug: "halebop",
@@ -131,19 +131,6 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 		background: projectBackground("#89D4F6"),
 	},
 	{
-		slug: "cocktailcruise",
-		title: "Cocktail Cruise",
-		years: "2022 - 2023",
-		intro:
-			"Capture the flag in a vibrant neon arcade '80s atmosphere. Originally released for iOS, the game turned your iPad into the game board while you and your friends controlled your ships with iPhones. Up to 8 players could join for total mayhem.\nWe later started developing a more polished version for Steam, but unfortunately it was never released.",
-		quote: {
-			text: "Very underrated game! There are not many apps like this one on the App Store 👌. This game was definitely very ahead of its time. The concept, and design goes hand in hand with its awesome sound tracks as well.",
-			by: "Oreoninja22, Random customer, Apple App Store",
-		},
-		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS", "Steam"],
-		background: projectBackground("#ffedfb"),
-	},
-	{
 		slug: "comhem",
 		title: "Com Hem",
 		years: "2015 - 2017",
@@ -157,17 +144,17 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 		background: projectBackground("#D4DDD4"),
 	},
 	{
-		slug: "holy",
-		title: "The Holy Hand Grenade",
-		years: "2012 - 2014",
+		slug: "cocktailcruise",
+		title: "Cocktail Cruise",
+		years: "2014 - 2017",
 		intro:
-			"Let there be light — and there was light. Holy Handgrenade was a quirky iOS game where players competed in once-a-day reaction battles, trying to outlast a global leaderboard in chaotic last-man-standing tournaments.\nThe game was available on the app store for several years before ultimately coming to an end alongside the closing chapter of IMGNRY.",
+			"Capture the flag in a vibrant neon arcade '80s atmosphere. Originally released for iOS, the game turned your iPad into the game board while you and your friends controlled your ships with iPhones. Up to 8 players could join for total mayhem.\nWe later started developing a more polished version for Steam, but unfortunately it was never released.",
 		quote: {
-			text: "The Holy Hand Grenade distils competitive gaming into a short and sharp single game experience.",
-			by: "Chris Priestman, Pocket Gamer",
+			text: "Very underrated game! There are not many apps like this one on the App Store 👌. This game was definitely very ahead of its time. The concept, and design goes hand in hand with its awesome sound tracks as well.",
+			by: "Oreoninja22, Random customer, Apple App Store",
 		},
-		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS"],
-		background: projectBackground("#D8F3FD"),
+		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS", "Steam"],
+		background: projectBackground("#ffedfb"),
 	},
 	{
 		slug: "nordea",
@@ -200,6 +187,19 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 			{ files: ["2b"] },
 		],
 		showOnHome: false,
+	},
+	{
+		slug: "holy",
+		title: "The Holy Hand Grenade",
+		years: "2012 - 2014",
+		intro:
+			"Let there be light — and there was light. Holy Handgrenade was a quirky iOS game where players competed in once-a-day reaction battles, trying to outlast a global leaderboard in chaotic last-man-standing tournaments.\nThe game was available on the app store for several years before ultimately coming to an end alongside the closing chapter of IMGNRY.",
+		quote: {
+			text: "The Holy Hand Grenade distils competitive gaming into a short and sharp single game experience.",
+			by: "Chris Priestman, Pocket Gamer",
+		},
+		tags: ["Game concept", "Art Direction", "SFX", "Marketing", "UI / UX", "iOS"],
+		background: projectBackground("#D8F3FD"),
 	},
 ];
 
