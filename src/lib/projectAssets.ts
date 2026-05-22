@@ -22,6 +22,18 @@ const projectImages = import.meta.glob<{ default: ImageMetadata }>(
 	{ eager: true },
 );
 
+export function getProjectThumbnail(slug: string): ImageMetadata {
+	const entry = Object.entries(projectImages).find(
+		([path]) => path.includes(`/projects/${slug}/`) && path.includes("-thumbnail."),
+	);
+
+	if (!entry) {
+		throw new Error(`Missing thumbnail for project: ${slug}`);
+	}
+
+	return entry[1].default;
+}
+
 function parseImagePath(path: string): Omit<ParsedFile, "image"> | null {
 	const match = path.match(/\/projects\/([^/]+)\/p-[^/]+-([^.]+)\.(png|jpe?g)$/i);
 	if (!match) return null;

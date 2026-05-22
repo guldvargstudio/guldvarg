@@ -3,7 +3,8 @@ import MainSeparator from "../../components/MainSeparator.astro";
 import ProjectGallery from "../../components/ProjectGallery.astro";
 import ProjectHeader from "../../components/ProjectHeader.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { getProjectBySlug, getSiteNavigation, projects } from "../../data/projects";
+import { getProjectBySlug, projects } from "../../data/projects";
+import { getSiteNavigation } from "../../data/projectNavigation";
 import { getProjectShareDescription } from "../../lib/socialMeta";
 import { getProjectOgImage, parseProjectImages } from "../../lib/projectAssets";
 
@@ -40,13 +41,15 @@ const ogImage = getProjectOgImage(
 <link rel="stylesheet" href={projectStyles} />
 
 <BaseLayout
-	title={`${project.title} — Guldvarg Studio`}
-	description={getProjectShareDescription(project)}
-	image={ogImage}
-	imageAlt={`${project.title} project preview`}
-	canonicalPath={`/projects/${project.slug}/`}
+	seo={{
+		title: `${project.title} — Guldvarg Studio`,
+		description: getProjectShareDescription(project),
+		image: ogImage,
+		imageAlt: `${project.title} project preview`,
+		canonicalPath: `/projects/${project.slug}/`,
+	}}
+	navigation={navigation}
 	background={project.background}
-	{...navigation}
 >
 	<div class="project">
 		<ProjectHeader project={project} />

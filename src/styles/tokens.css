@@ -1,0 +1,51 @@
+:root {
+	/* Brown */
+	--color-brown-1: #2a1814;
+
+	/* Yellow */
+	--color-yellow: #ffc629;
+
+	/* Beige */
+	--color-beige-1: #fffaeb;
+	--color-beige-2: #f2ebd9;
+
+	/* Rust */
+	--color-rust-1: #9e5900;
+	--color-rust-2: #6b3d00;
+	--color-rust-1-20: rgba(158, 89, 0, 0.2);
+	--color-rust-1-10: rgba(158, 89, 0, 0.1);
+
+	/* Semantic */
+	--color-hover: var(--color-brown-1);
+
+	/* Typography */
+	--font-display: "Wolf", arial, sans-serif;
+	--font-body: "Source Sans 3", arial, sans-serif;
+	--font-size-caps-sm: 12px;
+	--letter-spacing-caps-sm: 1.2px;
+	--font-size-caps-md: 14px;
+	--letter-spacing-caps-md: 1.4px;
+	--font-size-caps-lg: 16px;
+	--letter-spacing-caps-lg: 1.6px;
+	--font-size-source-1: 12px;
+	--font-size-source-3: 16px;
+
+	/* Layout */
+	--content-max-width: 1312px;
+	--nav-padding-y: 40px;
+	--step-nav-inner-height: 36px;
+	--step-nav-height: calc(var(--nav-padding-y) * 2 + var(--step-nav-inner-height));
+	--page-content-offset: 128px;
+	--page-section-gap: 128px;
+	--project-gallery-gap: 64px;
+	--project-gallery-grid-gap: 16px;
+	--page-gutter: var(--nav-padding-y);
+	--content-width: min(var(--content-max-width), calc(100% - (var(--page-gutter) * 2)));
+
+	/* Motion */
+	--step-nav-transition-duration: 0.4s;
+	--step-nav-transition-easing: ease;
+	--transition-interactive:
+		color var(--step-nav-transition-duration) var(--step-nav-transition-easing),
+		border-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
+}

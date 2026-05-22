@@ -10,7 +10,8 @@ import {
 	pageBgEasingCss,
 	pageBgTransitionCss,
 } from "../config/motion";
-import { defaultPageBackground, getPageBgEnd } from "../data/projects";
+import type { SiteNavigation } from "../data/projectNavigation";
+import { defaultPageBackground, getPageBgEnd } from "../data/projectBackground";
 import {
 	defaultOgImage,
 	defaultSiteDescription,
@@ -18,21 +19,15 @@ import {
 	toAbsoluteUrl,
 	toImageUrl,
 } from "../lib/socialMeta";
+import type { SiteSeo } from "../lib/siteSeo";
 
 interface Props {
-	title?: string;
-	description?: string;
-	image?: ImageMetadata | string;
-	imageAlt?: string;
-	canonicalPath?: string;
-	type?: "website" | "article";
-	active?: "home" | "about" | "project";
-	prevHref?: string;
-	nextHref?: string;
+	seo?: SiteSeo;
+	navigation: SiteNavigation;
 	background?: string;
-	activeDotIndex?: number;
-	dotCount?: number;
 }
+
+const { seo = {}, navigation, background } = Astro.props;
 
 const {
 	title = siteName,
@@ -41,13 +36,7 @@ const {
 	imageAlt = siteName,
 	canonicalPath,
 	type = "website",
-	active = "home",
-	prevHref,
-	nextHref,
-	background,
-	activeDotIndex,
-	dotCount,
-} = Astro.props;
+} = seo;
 
 const pageBackground = background ?? defaultPageBackground;
 const pageBgEnd = getPageBgEnd(pageBackground);
@@ -65,12 +54,6 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Roboto:wght@500;600;700;800;900&display=swap"
-			rel="stylesheet"
-		/>
 		<title>{title}</title>
 		<meta name="description" content={description} />
 		<link rel="canonical" href={canonicalURL} />
@@ -116,10 +99,10 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 			id="step-nav-state"
 			hidden
 			aria-hidden="true"
-			data-step-nav-active={active}
-			data-step-nav-dot={activeDotIndex ?? ""}
-			data-step-nav-prev={prevHref}
-			data-step-nav-next={nextHref}
+			data-step-nav-active={navigation.active}
+			data-step-nav-dot={navigation.activeDotIndex ?? ""}
+			data-step-nav-prev={navigation.prevHref}
+			data-step-nav-next={navigation.nextHref}
 		></div>
 		<div
 			id="page-bg-fill"
@@ -135,11 +118,11 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 		></div>
 		<header class="site-header">
 			<StepNav
-				active={active}
-				prevHref={prevHref}
-				nextHref={nextHref}
-				activeDotIndex={activeDotIndex}
-				dotCount={dotCount}
+				active={navigation.active}
+				prevHref={navigation.prevHref}
+				nextHref={navigation.nextHref}
+				activeDotIndex={navigation.activeDotIndex}
+				dotCount={navigation.dotCount}
 			/>
 		</header>
 		<div class="page">

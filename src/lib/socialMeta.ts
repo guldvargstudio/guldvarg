@@ -1,13 +1,11 @@
-import type { ImageMetadata } from "astro";
-
-import type { ProjectMeta } from "../data/projects";
-
-export const siteName = "Guldvarg Studio";
+import { siteName } from "../config/site";
 
 export const defaultSiteDescription =
 	"Guldvarg Studio — Selected Work by Kristofer Guldvarg";
 
 export const defaultOgImage = "/og-image.png";
+
+export { siteName };
 
 export function truncateDescription(text: string, maxLength = 160): string {
 	const normalized = text.replace(/\s+/g, " ").trim();
@@ -15,7 +13,11 @@ export function truncateDescription(text: string, maxLength = 160): string {
 	return `${normalized.slice(0, maxLength - 1).trimEnd()}…`;
 }
 
-export function getProjectShareDescription(project: ProjectMeta): string {
+export function getProjectShareDescription(project: {
+	title: string;
+	intro?: string;
+	quote?: { text: string };
+}): string {
 	const source =
 		project.intro?.split("\n").find((paragraph) => paragraph.trim()) ??
 		project.quote?.text.split("\n").find((paragraph) => paragraph.trim()) ??

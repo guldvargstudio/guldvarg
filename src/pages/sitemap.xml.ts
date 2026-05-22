@@ -1,9 +1,8 @@
 import type { APIRoute } from "astro";
+import { siteUrl } from "../config/site";
 import { projects } from "../data/projects";
 
 export const prerender = true;
-
-const site = "https://guldvarg.com";
 
 export const GET: APIRoute = () => {
 	const paths = ["/", "/about", ...projects.map((project) => `/projects/${project.slug}`)];
@@ -13,7 +12,7 @@ export const GET: APIRoute = () => {
 ${paths
 	.map(
 		(path) => `  <url>
-    <loc>${new URL(path, site).href}</loc>
+    <loc>${new URL(path, siteUrl).href}</loc>
   </url>`,
 	)
 	.join("\n")}

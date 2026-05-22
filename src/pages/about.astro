@@ -2,7 +2,7 @@
 import AboutContent from "../components/AboutContent.astro";
 import MainSeparator from "../components/MainSeparator.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { getSiteNavigation } from "../data/projects";
+import { getSiteNavigation } from "../data/projectNavigation";
 import { truncateDescription } from "../lib/socialMeta";
 import { skillsText } from "../data/about";
 
@@ -15,10 +15,12 @@ const aboutDescription = truncateDescription(skillsText[0]);
 <link rel="stylesheet" href={aboutStyles} />
 
 <BaseLayout
-	title="About — Guldvarg Studio"
-	description={aboutDescription}
-	canonicalPath="/about/"
-	{...navigation}
+	seo={{
+		title: "About — Guldvarg Studio",
+		description: aboutDescription,
+		canonicalPath: "/about/",
+	}}
+	navigation={navigation}
 >
 	<div class="about">
 		<AboutContent />
