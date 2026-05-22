@@ -126,7 +126,12 @@ export function applyStepNavVisualState(state: StepNavVisualState, force = false
 
 	const hidden = state.active === "home";
 	nav.classList.toggle("step-nav--home-hidden", hidden);
-	nav.setAttribute("aria-hidden", hidden ? "true" : "false");
+
+	if (hidden) {
+		nav.setAttribute("inert", "");
+	} else {
+		nav.removeAttribute("inert");
+	}
 
 	const projectCount = getProjectDotCount(nav);
 	const activePosition = getNavPosition(state, projectCount);

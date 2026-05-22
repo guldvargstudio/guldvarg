@@ -23,7 +23,7 @@ const {
 	transition:persist
 	transition:animate="none"
 	aria-label="Site navigation"
-	aria-hidden={active === "home" ? "true" : "false"}
+	inert={active === "home" ? true : undefined}
 >
 	<div class="step-nav__inner" style={`--step-nav-dot-count: ${dotCount}`}>
 		<a class="step-nav__btn" href={prevHref} aria-label="Previous" data-nav-direction="prev">
