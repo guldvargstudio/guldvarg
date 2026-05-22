@@ -156,11 +156,6 @@
 	color: var(--color-hover);
 }
 
-.step-nav a.step-nav__btn:hover,
-.step-nav a.step-nav__btn:focus-visible {
-	color: var(--color-rust-2);
-}
-
 .step-nav--compact a.step-nav__dot::before {
 	width: var(--dot-visual-size, 8px);
 	height: var(--dot-visual-size, 8px);

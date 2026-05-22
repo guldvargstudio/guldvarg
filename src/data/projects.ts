@@ -65,10 +65,10 @@ export const projects: ProjectMeta[] = [
 		intro:
 			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
 		quote: {
-			text: "This game won't let me sleep anymore. Being hunted constantly. We have to shut the shit down!",
-			by: "Fille, Developer, IMGNRY",
+			text: "",
+			by: "Anna Dymling, Founder, Oh!Garden",
 		},
-		tags: ["Rebranding", "Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android"],
+		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User Interviews"],
 		background: bg("#D3D9CF"),
 	},
 	{
@@ -128,7 +128,7 @@ export const projects: ProjectMeta[] = [
 			text: "Kristofer has laid the foundation for the form and design of our new Libris search exceptionally. It's evident that he enjoys what he does! He is serious, systematic, and motivated, and with his extensive experience, he listens curiously to feedback from others. Creativity combined with an eye for detail means that he delivers well-thought-out solutions beyond expectations.",
 			by: "Maria Kadesjö, Head of Development and Design, National Library of Sweden",
 		},
-		tags: ["Rebranding", "UI / UX", "Design system", "Web", "User testing"],
+		tags: ["Art Direction", "UI / UX", "Design system", "Web", "User Interviews"],
 		background: bg("#dceae5"),
 	},
 	{
@@ -143,7 +143,7 @@ export const projects: ProjectMeta[] = [
 			text: "Kristofer was given the project scope to establish a new design system for Halebop and ended up not only delivering above and beyond the original scope, but he also became a core contributor in the Halebop team. His approach was refreshing and integral to where Halebop is today.",
 			by: "Emma Craig, Head of halebop",
 		},
-		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User testing"],
+		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User Interviews"],
 		background: bg("#E2F3EF"),
 	},
 	{
@@ -158,7 +158,7 @@ export const projects: ProjectMeta[] = [
 			text: "With an eye for detail and a comprehensive systematic approach to problem solving and design, Kristofer is a very valuable contributor to both product solutions and as a team player. His long experience is also reflected in his humble approach and very likeable personality.",
 			by: "Patrik Axelsson, VP Product, Soundtrack",
 		},
-		tags: ["Art Direction", "UI / UX", "Design system", "Icons", "Cover art", "Web", "iOS", "Android", "User testing"],
+		tags: ["Art Direction", "UI / UX", "Design system", "Icons", "Cover art", "Web", "iOS", "Android", "User Interviews"],
 		background: bg("#D6D6D6"),
 	},
 	{
@@ -203,7 +203,7 @@ export const projects: ProjectMeta[] = [
 			text: "Kristofer is always full of creative ideas and positive energy. He creates awesome designs and user flows, seeks and listen to feedback. He's really good to sell and explain his ideas and show how they fit in the bigger picture.",
 			by: "Kristina Trossmo, Agile Coach, Com Hem",
 		},
-		tags: ["Rebranding", "Art Direction", "UI / UX", "Design system", "Web"],
+		tags: ["Art Direction", "UI / UX", "Design system", "Web"],
 		background: bg("#D4DDD4"),
 	},
 	{

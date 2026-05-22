@@ -64,6 +64,22 @@
 		border-color var(--step-nav-transition-duration) var(--step-nav-transition-easing);
 }
 
+.text-source-1-italic {
+	font-family: var(--font-body);
+	font-size: var(--font-size-source-1);
+	font-style: italic;
+	font-weight: 400;
+	line-height: normal;
+}
+
+.text-source-3-italic {
+	font-family: var(--font-body);
+	font-size: var(--font-size-source-3);
+	font-style: italic;
+	font-weight: 400;
+	line-height: normal;
+}
+
 *,
 *::before,
 *::after {
@@ -241,6 +257,12 @@ a.project-card:focus-visible .project-card__title {
 		--page-section-gap: 64px;
 		--project-gallery-gap: 32px;
 		--project-gallery-grid-gap: 8px;
+	}
+
+	.project,
+	.about {
+		--page-content-offset: 32px;
+		--page-section-gap: 32px;
 	}
 }
 
