@@ -1,4 +1,5 @@
 import { contentTransitionDurationMs } from "../config/motion";
+import { isInternalNavigationLink } from "../lib/navigation";
 import {
 	computeStepNavLayout,
 	computeVisibleDotWindow,
@@ -7,6 +8,7 @@ import {
 	STEP_NAV_DOT_MODIFIER_CLASSES,
 	type StepNavLayout,
 } from "../lib/stepNavLayout";
+import { getStepNavProjectCount, getStepNavStateFromLink } from "../lib/stepNavDirection";
 import {
 	readStepNavVisualState,
 	type StepNavVisualState,
@@ -17,27 +19,11 @@ import {
 	TRANSITION_BEFORE_SWAP,
 } from "astro:transitions/client";
 
-function isInternalNavigationLink(link: HTMLAnchorElement) {
-	const url = new URL(link.href, window.location.origin);
-	return url.origin === window.location.origin;
-}
-
 let pendingStepNavState: StepNavVisualState | null = null;
 let stateObserver: MutationObserver | null = null;
 let resizeObserver: ResizeObserver | null = null;
 let lastAppliedStateKey = "";
 let lastLayoutKey = "";
-
-function getProjectDotCount(nav: Element): number {
-	const dotsContainer = nav.querySelector(".step-nav__dots");
-
-	if (dotsContainer instanceof HTMLElement && dotsContainer.dataset.dotCount) {
-		const count = Number(dotsContainer.dataset.dotCount);
-		if (Number.isFinite(count)) return count;
-	}
-
-	return nav.querySelectorAll('.step-nav__dot:not(.step-nav__dot--endpoint)').length;
-}
 
 function getCenterWidth(nav: Element): number {
 	const inner = nav.querySelector(".step-nav__inner");
@@ -53,7 +39,7 @@ function clearDotModifierClasses(dot: Element) {
 }
 
 function applyStepNavLayout(nav: Element, state: StepNavVisualState, layout: StepNavLayout) {
-	const projectCount = getProjectDotCount(nav);
+	const projectCount = getStepNavProjectCount();
 	const activePosition = getNavPosition(state, projectCount);
 	const layoutKey = `${layout.mode}:${layout.gap}:${layout.compact}:${layout.maxVisible}:${activePosition}:${getCenterWidth(nav)}`;
 	if (layoutKey === lastLayoutKey) return;
@@ -93,7 +79,7 @@ function applyStepNavLayout(nav: Element, state: StepNavVisualState, layout: Ste
 }
 
 function updateStepNavLayout(nav: Element, state: StepNavVisualState) {
-	const projectCount = getProjectDotCount(nav);
+	const projectCount = getStepNavProjectCount();
 	const layout = computeStepNavLayout(getCenterWidth(nav), projectCount);
 	applyStepNavLayout(nav, state, layout);
 }
@@ -102,7 +88,7 @@ function stateKey(state: StepNavVisualState): string {
 	return `${state.active}:${state.activeDotIndex ?? ""}`;
 }
 
-export function applyStepNavVisualState(state: StepNavVisualState, force = false) {
+function applyStepNavVisualState(state: StepNavVisualState, force = false) {
 	const nav = document.querySelector(".step-nav");
 	if (!nav) return;
 
@@ -133,7 +119,7 @@ export function applyStepNavVisualState(state: StepNavVisualState, force = false
 		nav.removeAttribute("inert");
 	}
 
-	const projectCount = getProjectDotCount(nav);
+	const projectCount = getStepNavProjectCount();
 	const activePosition = getNavPosition(state, projectCount);
 
 	nav.querySelectorAll(".step-nav__dot").forEach((dot) => {
@@ -150,10 +136,6 @@ export function applyStepNavVisualState(state: StepNavVisualState, force = false
 	});
 
 	updateStepNavLayout(nav, state);
-}
-
-function setPendingStepNavState(state: StepNavVisualState) {
-	pendingStepNavState = state;
 }
 
 function resolveStepNavState(): StepNavVisualState {
@@ -184,17 +166,6 @@ function scheduleStepNavCommits() {
 	);
 }
 
-export function syncStepNavFromDocument(doc: Document = document) {
-	const state = doc.getElementById("step-nav-state")
-		? readStepNavVisualState(doc)
-		: pendingStepNavState;
-
-	if (state) {
-		setPendingStepNavState(state);
-		applyStepNavVisualState(state);
-	}
-}
-
 export function syncStepNavLinks(doc: Document = document) {
 	const nav = document.querySelector(".step-nav");
 	if (!nav) return;
@@ -213,51 +184,6 @@ export function syncStepNavLinks(doc: Document = document) {
 	if (nextBtn instanceof HTMLAnchorElement && stepNavNext) {
 		nextBtn.href = stepNavNext;
 	}
-}
-
-function parseNavStateFromLink(link: HTMLAnchorElement, nav: Element): StepNavVisualState | null {
-	const url = new URL(link.href, window.location.origin);
-	const path = url.pathname.replace(/\/$/, "") || "/";
-
-	if (path === "/") {
-		return { active: "home" };
-	}
-
-	if (path === "/about") {
-		return { active: "about" };
-	}
-
-	if (link.classList.contains("step-nav__dot")) {
-		const navPosition = Number(link.dataset.navPosition);
-		if (navPosition === 0) return { active: "home" };
-
-		const projectCount = getProjectDotCount(nav);
-		if (navPosition === projectCount + 1) return { active: "about" };
-
-		const index = Number(link.dataset.dotIndex);
-		if (Number.isFinite(index)) {
-			return { active: "project", activeDotIndex: index };
-		}
-	}
-
-	const dot = nav.querySelector<HTMLAnchorElement>(
-		`.step-nav__dot[href="${url.pathname}"], .step-nav__dot[href="${path}"], .step-nav__dot[href="${path}/"]`,
-	);
-
-	if (dot) {
-		const navPosition = Number(dot.dataset.navPosition);
-		if (navPosition === 0) return { active: "home" };
-
-		const projectCount = getProjectDotCount(nav);
-		if (navPosition === projectCount + 1) return { active: "about" };
-
-		const index = Number(dot.dataset.dotIndex);
-		if (Number.isFinite(index)) {
-			return { active: "project", activeDotIndex: index };
-		}
-	}
-
-	return null;
 }
 
 function observeStepNavStateElement() {
@@ -311,13 +237,10 @@ document.addEventListener(
 		if (!(link instanceof HTMLAnchorElement)) return;
 		if (!isInternalNavigationLink(link)) return;
 
-		const nav = document.querySelector(".step-nav");
-		if (!nav) return;
-
-		const nextState = parseNavStateFromLink(link, nav);
+		const nextState = getStepNavStateFromLink(link);
 		if (!nextState) return;
 
-		setPendingStepNavState(nextState);
+		pendingStepNavState = nextState;
 		applyStepNavVisualState(nextState, true);
 	},
 	true,
@@ -326,8 +249,7 @@ document.addEventListener(
 document.addEventListener(TRANSITION_BEFORE_SWAP, (event) => {
 	if (!isTransitionBeforeSwapEvent(event)) return;
 
-	const state = readStepNavVisualState(event.newDocument);
-	setPendingStepNavState(state);
+	pendingStepNavState = readStepNavVisualState(event.newDocument);
 	syncStepNavLinks(event.newDocument);
 });
 

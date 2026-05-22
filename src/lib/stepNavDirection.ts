@@ -1,7 +1,7 @@
+import { getNavPosition } from "./stepNavLayout";
 import { readStepNavVisualState, type StepNavVisualState } from "./stepNavState";
 
-/** Linear nav order: Home → dot 0 → … → dot n-1 → About */
-export function getStepNavDotCount(doc: Document = document): number {
+export function getStepNavProjectCount(doc: Document = document): number {
 	const dotsContainer = doc.querySelector(".step-nav__dots");
 
 	if (dotsContainer instanceof HTMLElement && dotsContainer.dataset.dotCount) {
@@ -9,16 +9,10 @@ export function getStepNavDotCount(doc: Document = document): number {
 		if (Number.isFinite(count)) return count;
 	}
 
-	return doc.querySelectorAll(".step-nav__dot").length;
-}
+	const nav = doc.querySelector(".step-nav");
+	if (!nav) return 0;
 
-export function getNavPosition(
-	state: StepNavVisualState,
-	dotCount: number,
-): number {
-	if (state.active === "home") return 0;
-	if (state.active === "about") return dotCount + 1;
-	return (state.activeDotIndex ?? 0) + 1;
+	return nav.querySelectorAll(".step-nav__dot:not(.step-nav__dot--endpoint)").length;
 }
 
 function normalizePath(pathname: string): string {
@@ -27,13 +21,13 @@ function normalizePath(pathname: string): string {
 
 export function getLinkNavPosition(
 	link: HTMLAnchorElement,
-	dotCount: number,
+	projectCount: number,
 	doc: Document = document,
 ): number | null {
 	const path = normalizePath(new URL(link.href).pathname);
 
 	if (path === "/") return 0;
-	if (path === "/about") return dotCount + 1;
+	if (path === "/about") return projectCount + 1;
 
 	if (link.classList.contains("step-nav__dot")) {
 		const navPosition = Number(link.dataset.navPosition);
@@ -58,6 +52,18 @@ export function getLinkNavPosition(
 	return null;
 }
 
+export function getStepNavStateFromLink(
+	link: HTMLAnchorElement,
+	doc: Document = document,
+): StepNavVisualState | null {
+	const projectCount = getStepNavProjectCount(doc);
+	const position = getLinkNavPosition(link, projectCount, doc);
+	if (position === null) return null;
+	if (position === 0) return { active: "home" };
+	if (position === projectCount + 1) return { active: "about" };
+	return { active: "project", activeDotIndex: position - 1 };
+}
+
 export function resolveNavDirection(
 	link: HTMLAnchorElement,
 	doc: Document = document,
@@ -67,11 +73,11 @@ export function resolveNavDirection(
 		return explicit;
 	}
 
-	const dotCount = getStepNavDotCount(doc);
-	const targetPosition = getLinkNavPosition(link, dotCount, doc);
+	const projectCount = getStepNavProjectCount(doc);
+	const targetPosition = getLinkNavPosition(link, projectCount, doc);
 	if (targetPosition === null) return null;
 
-	const currentPosition = getNavPosition(readStepNavVisualState(doc), dotCount);
+	const currentPosition = getNavPosition(readStepNavVisualState(doc), projectCount);
 	if (targetPosition === currentPosition) return null;
 
 	return targetPosition > currentPosition ? "next" : "prev";

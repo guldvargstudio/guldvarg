@@ -1,12 +1,13 @@
 import {
 	contentTransitionDurationCss,
-	contentTransitionDurationMs,
 	contentTransitionEasingCss,
 	pageBgTransitionMs,
 } from "../config/motion";
 import { runAfterContentSlide as runAfterContentSlideBase } from "../lib/contentTransition";
+import { isInternalNavigationLink } from "../lib/navigation";
 import { resolveNavDirection } from "../lib/stepNavDirection";
 import { readStepNavVisualState, type StepNavVisualState } from "../lib/stepNavState";
+import { getPageBgEnd } from "../data/projects";
 import { commitStepNavState, syncStepNavLinks } from "./stepNav";
 import {
 	isTransitionBeforeSwapEvent,
@@ -17,7 +18,7 @@ import {
 const DURATION = contentTransitionDurationCss;
 const EASING = contentTransitionEasingCss;
 const BEIGE_1 = "#fffaeb";
-const DEFAULT_PAGE_BG_END = "#f2ebd9";
+const DEFAULT_PAGE_BG_END = getPageBgEnd();
 
 let pendingNavVisualState: StepNavVisualState | null = null;
 let pendingPageBgEnd: string | null = null;
@@ -37,20 +38,6 @@ let colorAnimation: {
 	duration: number;
 	token: number;
 } | null = null;
-
-function logPageBg(event: string, data: Record<string, unknown> = {}) {
-	const transition = (document as Document & { viewTransition?: ViewTransition }).viewTransition;
-
-	console.log("[page-bg]", event, {
-		t: Math.round(performance.now()),
-		path: location.pathname,
-		displayed: displayedPageBgEnd,
-		painted: pageBgElement?.dataset.endColor ?? null,
-		animating: colorAnimation?.to ?? null,
-		viewTransition: Boolean(transition),
-		...data,
-	});
-}
 
 function bgGradient(endColor: string) {
 	return `linear-gradient(180deg, ${BEIGE_1} 0%, ${endColor} 100%)`;
@@ -164,10 +151,9 @@ function lockAllPageBgLayerStyles() {
 	lockPageBgLayerStyles(ensurePageBgFill());
 }
 
-function paintPageBg(endColor: string, reason = "paint") {
+function paintPageBg(endColor: string) {
 	const gradient = ensurePageBg();
 	const fill = ensurePageBgFill();
-	const previous = displayedPageBgEnd;
 
 	lockAllPageBgLayerStyles();
 	gradient.dataset.endColor = endColor;
@@ -175,14 +161,10 @@ function paintPageBg(endColor: string, reason = "paint") {
 	fill.style.backgroundColor = endColor;
 	syncPageBgSolid(endColor);
 	displayedPageBgEnd = endColor;
-
-	if (previous !== endColor) {
-		logPageBg("paint", { reason, endColor });
-	}
 }
 
-function pinFrozenPageBg(reason = "pin") {
-	paintPageBg(displayedPageBgEnd, reason);
+function pinFrozenPageBg() {
+	paintPageBg(displayedPageBgEnd);
 }
 
 function initPageBackground() {
@@ -190,46 +172,26 @@ function initPageBackground() {
 	displayedPageBgEnd = endColor;
 	frozenPageBgEnd = endColor;
 	syncViewTransitionBackground(endColor);
-	paintPageBg(endColor, "init");
-	logPageBg("init", {
-		endColor,
-		bodyTarget: document.body?.dataset.pageBgEnd ?? null,
-	});
-}
-
-function runAfterContentSlide(task: () => void, reason: string) {
-	logPageBg("wait:slide", { reason, delayMs: contentTransitionDurationMs });
-	runAfterContentSlideBase(task);
-}
-
-function runWhenPageVisible(task: () => void, reason: string) {
-	logPageBg("run:immediate", { reason });
-	task();
+	paintPageBg(endColor);
 }
 
 function revealPageBackground(endColor: string) {
-	logPageBg("reveal:start", { target: endColor });
-	pinFrozenPageBg("reveal-pin");
+	pinFrozenPageBg();
 
 	requestAnimationFrame(() => {
-		logPageBg("reveal:animate", { target: endColor });
 		applyPageBgEnd(endColor);
 	});
 }
 
 function schedulePageBgEnd(endColor: string) {
 	const token = ++pageBgScheduleToken;
-	logPageBg("schedule", { target: endColor, token });
 
-	runAfterContentSlide(() => {
+	runAfterContentSlideBase(() => {
 		requestAnimationFrame(() => {
-			if (token !== pageBgScheduleToken) {
-				logPageBg("schedule:cancelled", { target: endColor, token });
-				return;
-			}
+			if (token !== pageBgScheduleToken) return;
 			revealPageBackground(endColor);
 		});
-	}, "schedule-page-bg");
+	});
 }
 
 function stopColorAnimation() {
@@ -241,25 +203,21 @@ function stopColorAnimation() {
 	}
 
 	if (colorAnimation) {
-		const committed = getAnimatedColorNow();
-		paintPageBg(committed, "stop-animation");
+		paintPageBg(getAnimatedColorNow());
 		colorAnimation = null;
-		logPageBg("animation:stopped", { committed });
 	}
 }
 
-function freezePageBgAtDisplayedColor(reason: string) {
+function freezePageBgAtDisplayedColor() {
 	pageBgScheduleToken += 1;
 	stopColorAnimation();
 	frozenPageBgEnd = displayedPageBgEnd;
 	syncViewTransitionBackground(frozenPageBgEnd);
-	pinFrozenPageBg(reason);
-	logPageBg("freeze", { reason, scheduleToken: pageBgScheduleToken, frozen: frozenPageBgEnd });
+	pinFrozenPageBg();
 }
 
 function animatePageBgTo(endColor: string) {
 	if (displayedPageBgEnd === endColor && !colorAnimation) {
-		logPageBg("animate:skip", { reason: "already-displayed", endColor });
 		return;
 	}
 
@@ -267,15 +225,13 @@ function animatePageBgTo(endColor: string) {
 
 	if (reducedMotion) {
 		stopColorAnimation();
-		paintPageBg(endColor, "reduced-motion");
-		logPageBg("animate:reduced-motion", { endColor });
+		paintPageBg(endColor);
 		return;
 	}
 
 	stopColorAnimation();
 
 	if (displayedPageBgEnd === endColor) {
-		logPageBg("animate:skip", { reason: "same-after-stop", endColor });
 		return;
 	}
 
@@ -283,21 +239,19 @@ function animatePageBgTo(endColor: string) {
 	const duration = pageBgTransitionMs;
 	const token = ++colorAnimationToken;
 
-	paintPageBg(fromColor, "animate-from");
+	paintPageBg(fromColor);
 
 	colorAnimation = { from: fromColor, to: endColor, start: 0, duration, token };
-	logPageBg("animate:start", { fromColor, endColor, duration, token });
 
 	const tick = (now: number) => {
 		if (token !== colorAnimationToken || !colorAnimation) return;
 
 		if (colorAnimation.start === 0) {
 			colorAnimation.start = now;
-			logPageBg("animate:first-frame", { fromColor, endColor, token });
 		}
 
 		const progress = Math.min(1, (now - colorAnimation.start) / colorAnimation.duration);
-		paintPageBg(lerpHexColor(fromColor, endColor, easeOutCubic(progress)), "animate-tick");
+		paintPageBg(lerpHexColor(fromColor, endColor, easeOutCubic(progress)));
 
 		if (progress < 1) {
 			colorAnimationFrame = requestAnimationFrame(tick);
@@ -306,10 +260,9 @@ function animatePageBgTo(endColor: string) {
 
 		colorAnimation = null;
 		colorAnimationFrame = null;
-		paintPageBg(endColor, "animate-complete");
+		paintPageBg(endColor);
 		frozenPageBgEnd = endColor;
 		syncViewTransitionBackground(endColor);
-		logPageBg("animate:complete", { endColor, token });
 	};
 
 	colorAnimationFrame = requestAnimationFrame(tick);
@@ -317,21 +270,9 @@ function animatePageBgTo(endColor: string) {
 
 function applyPageBgEnd(endColor: string) {
 	if (colorAnimation?.to === endColor) {
-		logPageBg("apply:skip", { reason: "already-animating-to", endColor });
 		return;
 	}
 	animatePageBgTo(endColor);
-}
-
-function isInternalNavigationLink(link: HTMLAnchorElement) {
-	if (link.origin !== location.origin) return false;
-	if (link.hasAttribute("download")) return false;
-	if (link.target && link.target !== "_self") return false;
-
-	const url = new URL(link.href);
-	if (url.pathname === location.pathname && url.hash) return false;
-
-	return true;
 }
 
 function injectDirectionalSlide(newDocument: Document, direction: "prev" | "next") {
@@ -406,7 +347,7 @@ document.addEventListener(
 		if (!isInternalNavigationLink(link)) return;
 		if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
 
-		freezePageBgAtDisplayedColor("click");
+		freezePageBgAtDisplayedColor();
 
 		const direction = resolveNavDirection(link);
 		if (direction) {
@@ -419,14 +360,10 @@ document.addEventListener(
 document.addEventListener(TRANSITION_BEFORE_SWAP, (event) => {
 	if (!isTransitionBeforeSwapEvent(event)) return;
 
-	freezePageBgAtDisplayedColor("before-swap");
+	freezePageBgAtDisplayedColor();
 
 	pendingNavVisualState = readStepNavVisualState(event.newDocument);
 	pendingPageBgEnd = event.newDocument.body.dataset.pageBgEnd ?? null;
-	logPageBg("before-swap", {
-		pendingPageBgEnd,
-		bodyTarget: event.newDocument.body.dataset.pageBgEnd ?? null,
-	});
 	syncStepNavLinks(event.newDocument);
 
 	const direction = sessionStorage.getItem("nav-direction");
@@ -439,13 +376,12 @@ document.addEventListener(TRANSITION_BEFORE_SWAP, (event) => {
 
 document.addEventListener(TRANSITION_AFTER_SWAP, () => {
 	handledByClientSwap = true;
-	logPageBg("after-swap", { bodyTarget: document.body.dataset.pageBgEnd ?? null });
 	lockAllPageBgLayerStyles();
-	paintPageBg(frozenPageBgEnd, "after-swap");
+	paintPageBg(frozenPageBgEnd);
 
 	requestAnimationFrame(() => {
 		lockAllPageBgLayerStyles();
-		paintPageBg(frozenPageBgEnd, "after-swap-rAF");
+		paintPageBg(frozenPageBgEnd);
 	});
 
 	applyPendingPageState();
@@ -453,29 +389,24 @@ document.addEventListener(TRANSITION_AFTER_SWAP, () => {
 
 document.addEventListener("astro:page-load", () => {
 	if (handledByClientSwap) {
-		logPageBg("page-load:skip", { reason: "handled-by-after-swap" });
 		handledByClientSwap = false;
 		return;
 	}
 
 	const endColor = document.body.dataset.pageBgEnd;
-	logPageBg("page-load", { bodyTarget: endColor ?? null });
 
-	runWhenPageVisible(() => {
-		requestAnimationFrame(() => {
-			if (colorAnimation) {
-				logPageBg("page-load:skip", { reason: "animation-active" });
-				return;
-			}
+	requestAnimationFrame(() => {
+		if (colorAnimation) {
+			return;
+		}
 
-			if (endColor && endColor !== displayedPageBgEnd) {
-				schedulePageBgEnd(endColor);
-				return;
-			}
+		if (endColor && endColor !== displayedPageBgEnd) {
+			schedulePageBgEnd(endColor);
+			return;
+		}
 
-			pinFrozenPageBg("page-load");
-		});
-	}, "page-load");
+		pinFrozenPageBg();
+	});
 });
 
 initPageBackground();

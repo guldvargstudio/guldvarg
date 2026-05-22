@@ -1,10 +1,10 @@
-export type EducationEntry = {
+type EducationEntry = {
 	years: string;
 	title: string;
 	description: string;
 };
 
-export type ContactLink = {
+type ContactLink = {
 	label: string;
 	href: string;
 	icon: "email" | "phone" | "bluesky" | "threads";

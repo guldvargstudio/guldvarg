@@ -20,7 +20,6 @@ function readFromElement(element: HTMLElement): StepNavVisualState {
 	};
 }
 
-/** Reads nav state from the non-persisted marker (swaps each navigation). */
 export function readStepNavVisualState(doc: Document = document): StepNavVisualState {
 	const stateElement = doc.getElementById(STATE_ELEMENT_ID);
 
@@ -29,14 +28,4 @@ export function readStepNavVisualState(doc: Document = document): StepNavVisualS
 	}
 
 	return readFromElement(doc.body);
-}
-
-/** @deprecated Use readStepNavVisualState */
-export function readStepNavVisualStateFromBody(body: HTMLElement): StepNavVisualState {
-	const stateElement = body.ownerDocument?.getElementById(STATE_ELEMENT_ID);
-	if (stateElement instanceof HTMLElement) {
-		return readFromElement(stateElement);
-	}
-
-	return readFromElement(body);
 }

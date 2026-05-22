@@ -1,5 +1,6 @@
 ---
 import type { ProjectMeta } from "../data/projects";
+import ProjectHeaderContent from "./ProjectHeaderContent.astro";
 import UiIcon from "./UiIcon.astro";
 
 interface Props {
@@ -40,65 +41,11 @@ const titleLongestWord = Math.max(...titleWords.map((word) => word.length), 1);
 						</button>
 					</div>
 
-					<div class="project-header__content" id="project-description">
-						{project.quote && (
-							<blockquote class="project-header__quote">
-								<div class="project-header__quote-body">
-									<p class="project-header__quote-text text-source-3-italic">{project.quote.text}</p>
-									<p class="project-header__quote-by">
-										<span class="project-header__quote-label text-source-1-italic">Quote by</span>
-										<span>{project.quote.by}</span>
-									</p>
-								</div>
-								<p class="project-header__quote-mark" aria-hidden="true">"</p>
-							</blockquote>
-						)}
-
-						{project.intro && <p class="project-header__intro">{project.intro}</p>}
-
-						{project.tags && project.tags.length > 0 && (
-							<div class="project-header__tags-wrap">
-								<p class="project-header__tags-label text-source-1-italic">My areas</p>
-								<ul class="project-header__tags">
-									{project.tags.map((tag) => (
-										<li class="project-header__tag">{tag}</li>
-									))}
-								</ul>
-							</div>
-						)}
-					</div>
+					<ProjectHeaderContent project={project} />
 				</div>
 			</div>
 		) : (
-			hasDetails && (
-				<div class="project-header__content" id="project-description">
-					{project.quote && (
-						<blockquote class="project-header__quote">
-							<div class="project-header__quote-body">
-								<p class="project-header__quote-text text-source-3-italic">{project.quote.text}</p>
-								<p class="project-header__quote-by">
-									<span class="project-header__quote-label text-source-1-italic">Quote by</span>
-									<span>{project.quote.by}</span>
-								</p>
-							</div>
-							<p class="project-header__quote-mark" aria-hidden="true">"</p>
-						</blockquote>
-					)}
-
-					{project.intro && <p class="project-header__intro">{project.intro}</p>}
-
-					{project.tags && project.tags.length > 0 && (
-						<div class="project-header__tags-wrap">
-							<p class="project-header__tags-label text-source-1-italic">My areas</p>
-							<ul class="project-header__tags">
-								{project.tags.map((tag) => (
-									<li class="project-header__tag">{tag}</li>
-								))}
-							</ul>
-						</div>
-					)}
-				</div>
-			)
+			hasDetails && <ProjectHeaderContent project={project} />
 		)
 	}
 </header>

@@ -35,7 +35,7 @@
 	letter-spacing: clamp(4.8px, 1vw, 9.6px);
 	text-wrap: balance;
 	text-transform: uppercase;
-	color: var(--color-dark);
+	color: var(--color-brown-1);
 }
 
 .project-header__content {
@@ -111,7 +111,7 @@
 	font-size: var(--font-size-source-3);
 	font-weight: 400;
 	line-height: normal;
-	color: var(--color-dark);
+	color: var(--color-brown-1);
 	white-space: pre-line;
 }
 

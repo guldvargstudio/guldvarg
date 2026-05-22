@@ -2,20 +2,7 @@
 import { Image } from "astro:assets";
 import photo from "../assets/ui/photo-guldvarg.jpg";
 import UiIcon from "./UiIcon.astro";
-import {
-	backgroundText,
-	contactLinks,
-	education,
-	skillsText,
-	type ContactLink,
-} from "../data/about";
-
-const iconNames: Record<ContactLink["icon"], "email" | "phone" | "bluesky" | "threads"> = {
-	email: "email",
-	phone: "phone",
-	bluesky: "bluesky",
-	threads: "threads",
-};
+import { backgroundText, contactLinks, education, skillsText } from "../data/about";
 ---
 
 <div class="about-content">
@@ -33,7 +20,7 @@ const iconNames: Record<ContactLink["icon"], "email" | "phone" | "bluesky" | "th
 								target={link.icon === "email" || link.icon === "phone" ? undefined : "_blank"}
 								rel={link.icon === "email" || link.icon === "phone" ? undefined : "noopener noreferrer"}
 							>
-								<UiIcon name={iconNames[link.icon]} class="about-contact__icon" />
+								<UiIcon name={link.icon} class="about-contact__icon" />
 								<span>{link.label}</span>
 							</a>
 						</li>

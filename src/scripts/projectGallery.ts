@@ -21,7 +21,7 @@ function bindGalleryImage(image: HTMLImageElement) {
 	image.addEventListener("error", () => revealImage(image), { once: true });
 }
 
-export function initProjectGallery(root: ParentNode = document) {
+function initProjectGallery(root: ParentNode = document) {
 	const gallery = root.querySelector(".project-gallery");
 	if (!gallery) return;
 

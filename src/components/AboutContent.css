@@ -49,7 +49,7 @@
 	font-size: 16px;
 	font-weight: 400;
 	line-height: normal;
-	color: var(--color-dark);
+	color: var(--color-brown-1);
 }
 
 .about-body p {
@@ -134,7 +134,7 @@
 	line-height: 1.1;
 	letter-spacing: 2.4px;
 	text-transform: uppercase;
-	color: var(--color-dark);
+	color: var(--color-brown-1);
 }
 
 .about-education__description {

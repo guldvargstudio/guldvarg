@@ -26,7 +26,6 @@ export type ProjectMeta = {
 	title: string;
 	thumbnail: ImageMetadata;
 	years?: string;
-	role?: string;
 	intro?: string;
 	quote?: ProjectQuote;
 	tags?: string[];
@@ -61,7 +60,6 @@ export const projects: ProjectMeta[] = [
 		title: "Oh!Garden",
 		thumbnail: ohgardenThumb,
 		years: "2025 - Ongoing",
-		role: "UX / UI designer",
 		intro:
 			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
 		quote: {
@@ -76,7 +74,6 @@ export const projects: ProjectMeta[] = [
 		title: "Siggesta Gård",
 		thumbnail: siggestaThumb,
 		years: "2023 - Ongoing",
-		role: "UX / UI designer & webflow developer",
 		intro:
 			"One of Stockholm's most established countryside destinations, bringing together accommodation, restaurants, conferences, activities, and events into a unified hospitality experience.\nI designed and developed the complete website in Webflow, including a flexible CMS setup built to support a large and continuously changing content ecosystem.",
 		quote: {
@@ -91,7 +88,6 @@ export const projects: ProjectMeta[] = [
 		title: "Most Wanted",
 		thumbnail: mostwantedThumb,
 		years: "2014 - 2026",
-		role: "Co-Founder & designer",
 		intro:
 			"A quirky game built around a persistent 24/7 gameplay loop. Players hunted rivals, climbed the ranks, and fought to survive as the world’s most wanted outlaw. While highly addictive for the few who discovered it, the concept ultimately proved too unconventional to market to a broader audience.",
 		quote: {
@@ -106,7 +102,6 @@ export const projects: ProjectMeta[] = [
 		title: "Picular",
 		thumbnail: picularThumb,
 		years: "2014 - 2024",
-		role: "Co-Founder & designer",
 		intro:
 			"Picular was a deeply ambitious product vision: a next-generation photo organization platform created by a team of two. Competing against giants like Google, Apple, Adobe, and Microsoft may have sounded unrealistic — yet in several areas, the experience genuinely surpassed them. Available across Mac, PC, iOS, and Android, the project eventually came to an end when my co-founder lost faith in its future.",
 		quote: {
@@ -121,7 +116,6 @@ export const projects: ProjectMeta[] = [
 		title: "Kungliga Biblioteket",
 		thumbnail: libraryThumb,
 		years: "2023 - 2024",
-		role: "ux / ui designer",
 		intro:
 			"The Swedish National Library Authority, also known as Kungliga Biblioteket, entrusted me with rebranding and reinventing the user experience of their most prominent service, Libris. The primary goal was to create a search experience that gives both librarians and the public a clear, intuitive way to find books and check their availability at local libraries.",
 		quote: {
@@ -136,7 +130,6 @@ export const projects: ProjectMeta[] = [
 		title: "Halebop",
 		thumbnail: halebopThumb,
 		years: "2022 - 2023",
-		role: "ux / ui designer",
 		intro:
 			"Sweden's happiest telecom company! During my year, I created a new design system to optimize, modernize, and streamline their solid visual brand. I also redesigned most of their main pages, including the payment flow. I coordinated the work with other designers and held regular meetings with two development teams.",
 		quote: {
@@ -151,7 +144,6 @@ export const projects: ProjectMeta[] = [
 		title: "Soundtrack",
 		thumbnail: soundtrackThumb,
 		years: "2019 - 2022",
-		role: "ux / ui designer",
 		intro:
 			"Soundtrack, known initially as Spotify For Business, is a comprehensive music service that provides a legal way to play music in public spaces. I designed the entire product for over two years. This included building a design system and streamlining the creation of thousands of playlist covers without compromising quality. The work also involved creating smooth onboarding, checkout, advanced subscription solutions, and music scheduling.",
 		quote: {
@@ -166,7 +158,6 @@ export const projects: ProjectMeta[] = [
 		title: "Tui",
 		thumbnail: tuiThumb,
 		years: "2017 - 2019",
-		role: "ux / ui designer",
 		intro:
 			"TUI, the world's largest leisure travel company, entrusted me to design the Nordic web and email experience during a transformative three-year period for the brand. My work spanned UI, UX, design system, and conversion-focused improvements, helping modernize and elevate the overall customer experience. I also helped build and shape the Nordic UX team, which during this period was appointed \"Center of Excellence\" on a global TUI level.",
 		quote: {
@@ -181,7 +172,6 @@ export const projects: ProjectMeta[] = [
 		title: "Cocktail Cruise",
 		thumbnail: cocktailcruiseThumb,
 		years: "2022 - 2023",
-		role: "Co-founder & designer",
 		intro:
 			"Capture the flag in a vibrant neon arcade '80s atmosphere. Originally released for iOS, the game turned your iPad into the game board while you and your friends controlled your ships with iPhones. Up to 8 players could join for total mayhem.\nWe later started developing a more polished version for Steam, but unfortunately it was never released.",
 		quote: {
@@ -196,7 +186,6 @@ export const projects: ProjectMeta[] = [
 		title: "Com Hem",
 		thumbnail: comhemThumb,
 		years: "2015 - 2017",
-		role: "ux / ui designer",
 		intro:
 			"For two years, I redesigned every page of the Com Hem website as part of their significant rebranding effort. I was responsible for transitioning the brand online from cheerful to premium, with a new logo and graphic profile that I also helped develop. This epic journey included an advanced checkout process and customer pages, allowing customers to tailor their TV, broadband, and telephony needs.",
 		quote: {
@@ -211,7 +200,6 @@ export const projects: ProjectMeta[] = [
 		title: "The Holy Hand Grenade",
 		thumbnail: holyThumb,
 		years: "2012 - 2014",
-		role: "Co-Founder & designer",
 		intro:
 			"Let there be light — and there was light. Holy Handgrenade was a quirky iOS game where players competed in once-a-day reaction battles, trying to outlast a global leaderboard in chaotic last-man-standing tournaments.\nThe game was available on the app store for several years before ultimately coming to an end alongside the closing chapter of IMGNRY.",
 		quote: {
@@ -226,7 +214,6 @@ export const projects: ProjectMeta[] = [
 		title: "Nordea",
 		thumbnail: nordeaThumb,
 		years: "2015 - 2016",
-		role: "ux / ui designer",
 		intro:
 			"My previous company, IMGNRY, was hired to design and develop a new iOS app for Nordea and their product, Räntebevis. The app featured advanced portfolio tools, live rate updates, news, and market information tailored to investors. I was responsible for the UI and UX design throughout the project, while also leading the collaboration and day-to-day communication with Nordea.",
 		quote: {
@@ -241,7 +228,6 @@ export const projects: ProjectMeta[] = [
 		title: "Wars",
 		thumbnail: warsThumb,
 		years: "2012 - 2015",
-		role: "Co-Founder & designer",
 		intro:
 			"Wars was a multiplayer strategy game for Steam, combining real-time and turn-based mechanics. The project went through several successful beta tests before development gradually faded out as other projects and commitments unfortunately began taking over. I still believe the game had a great deal of potential.",
 		quote: {
@@ -257,13 +243,7 @@ export const projects: ProjectMeta[] = [
 		],
 		showOnHome: false,
 	},
-
-
-
-
 ];
-
-export type ProjectListing = Pick<ProjectMeta, "slug" | "title" | "thumbnail">;
 
 export function getHomeProjects() {
 	return projects.filter((project) => project.showOnHome !== false);
@@ -273,15 +253,6 @@ export function getProjectBySlug(slug: string): ProjectMeta | undefined {
 	return projects.find((project) => project.slug === slug);
 }
 
-export function getProjectNavigation(slug: string) {
-	const index = projects.findIndex((project) => project.slug === slug);
-	if (index === -1) return null;
-
-	const prev = projects[(index - 1 + projects.length) % projects.length];
-	const next = projects[(index + 1) % projects.length];
-
-	return { index, prev, next };
-}
 
 export type SiteNavigation = {
 	active: "home" | "about" | "project";

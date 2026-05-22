@@ -1,11 +1,10 @@
 import type { StepNavVisualState } from "./stepNavState";
 
-export const STEP_NAV_GAP_MIN = 12;
-export const STEP_NAV_GAP_MAX = 16;
-export const STEP_NAV_DOT_SLOT = 16;
-export const STEP_NAV_LABELS_WIDTH = 104;
-export const STEP_NAV_EDGE_ANCHOR = 4;
-export const STEP_NAV_EDGE_SHRINK = 3;
+const STEP_NAV_GAP_MIN = 12;
+const STEP_NAV_GAP_MAX = 16;
+const STEP_NAV_DOT_SLOT = 16;
+const STEP_NAV_LABELS_WIDTH = 104;
+const STEP_NAV_EDGE_ANCHOR = 4;
 
 export const STEP_NAV_DOT_MODIFIER_CLASSES = [
 	"step-nav__dot--s6",
@@ -14,9 +13,9 @@ export const STEP_NAV_DOT_MODIFIER_CLASSES = [
 	"step-nav__dot--hidden",
 ] as const;
 
-export type StepNavDotModifier = (typeof STEP_NAV_DOT_MODIFIER_CLASSES)[number];
-export type DotWindow = { start: number; end: number };
-export type StepNavLayoutMode = "wide" | "dots-only";
+type StepNavDotModifier = (typeof STEP_NAV_DOT_MODIFIER_CLASSES)[number];
+type DotWindow = { start: number; end: number };
+type StepNavLayoutMode = "wide" | "dots-only";
 
 export type StepNavLayout = {
 	mode: StepNavLayoutMode;

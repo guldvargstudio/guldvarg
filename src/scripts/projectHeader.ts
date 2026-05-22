@@ -64,7 +64,7 @@ function bindProjectHeader(header: HTMLElement) {
 	});
 }
 
-export function initProjectHeader(root: ParentNode = document) {
+function initProjectHeader(root: ParentNode = document) {
 	root.querySelectorAll(HEADER_SELECTOR).forEach((node) => {
 		if (node instanceof HTMLElement) {
 			bindProjectHeader(node);
