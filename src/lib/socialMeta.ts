@@ -1,21 +1,18 @@
 import type { ImageMetadata } from "astro";
 
 import type { ProjectMeta } from "../data/projects";
-import { getHomeProjects, projects } from "../data/projects";
 
 export const siteName = "Guldvarg Studio";
 
 export const defaultSiteDescription =
 	"Guldvarg Studio — Selected Work by Kristofer Guldvarg";
 
+export const defaultOgImage = "/og-image.png";
+
 export function truncateDescription(text: string, maxLength = 160): string {
 	const normalized = text.replace(/\s+/g, " ").trim();
 	if (normalized.length <= maxLength) return normalized;
 	return `${normalized.slice(0, maxLength - 1).trimEnd()}…`;
-}
-
-export function getDefaultShareImage(): ImageMetadata {
-	return getHomeProjects()[0]?.thumbnail ?? projects[0].thumbnail;
 }
 
 export function getProjectShareDescription(project: ProjectMeta): string {

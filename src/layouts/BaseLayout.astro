@@ -12,8 +12,8 @@ import {
 } from "../config/motion";
 import { defaultPageBackground, getPageBgEnd } from "../data/projects";
 import {
+	defaultOgImage,
 	defaultSiteDescription,
-	getDefaultShareImage,
 	siteName,
 	toAbsoluteUrl,
 	toImageUrl,
@@ -22,7 +22,7 @@ import {
 interface Props {
 	title?: string;
 	description?: string;
-	image?: ImageMetadata;
+	image?: ImageMetadata | string;
 	imageAlt?: string;
 	canonicalPath?: string;
 	type?: "website" | "article";
@@ -37,7 +37,7 @@ interface Props {
 const {
 	title = siteName,
 	description = defaultSiteDescription,
-	image = getDefaultShareImage(),
+	image = defaultOgImage,
 	imageAlt = siteName,
 	canonicalPath,
 	type = "website",
@@ -52,7 +52,9 @@ const {
 const pageBackground = background ?? defaultPageBackground;
 const pageBgEnd = getPageBgEnd(pageBackground);
 const canonicalURL = toAbsoluteUrl(canonicalPath ?? Astro.url.pathname, Astro.site!);
-const shareImageUrl = toImageUrl(image, Astro.site!);
+const shareImageUrl =
+	typeof image === "string" ? toAbsoluteUrl(image, Astro.site!) : toImageUrl(image, Astro.site!);
+const shareImageDimensions = typeof image === "string" ? null : image;
 ---
 
 <!doctype html>
@@ -81,10 +83,10 @@ const shareImageUrl = toImageUrl(image, Astro.site!);
 		<meta property="og:image" content={shareImageUrl} />
 		<meta property="og:image:alt" content={imageAlt} />
 		{
-			image.width && image.height && (
+			shareImageDimensions?.width && shareImageDimensions?.height && (
 				<>
-					<meta property="og:image:width" content={String(image.width)} />
-					<meta property="og:image:height" content={String(image.height)} />
+					<meta property="og:image:width" content={String(shareImageDimensions.width)} />
+					<meta property="og:image:height" content={String(shareImageDimensions.height)} />
 				</>
 			)
 		}

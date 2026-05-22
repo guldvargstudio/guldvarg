@@ -5,7 +5,7 @@ import ProjectHeader from "../../components/ProjectHeader.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getProjectBySlug, getSiteNavigation, projects } from "../../data/projects";
 import { getProjectShareDescription } from "../../lib/socialMeta";
-import { parseProjectImages } from "../../lib/projectAssets";
+import { getProjectOgImage, parseProjectImages } from "../../lib/projectAssets";
 
 import projectStyles from "../../styles/pages/project.css?url";
 
@@ -29,6 +29,12 @@ const sections = parseProjectImages(
 	project.sectionColumns,
 	project.sectionGroups,
 );
+const ogImage = getProjectOgImage(
+	project.slug,
+	project.sectionOrder,
+	project.sectionColumns,
+	project.sectionGroups,
+) ?? project.thumbnail;
 ---
 
 <link rel="stylesheet" href={projectStyles} />
@@ -36,8 +42,8 @@ const sections = parseProjectImages(
 <BaseLayout
 	title={`${project.title} — Guldvarg Studio`}
 	description={getProjectShareDescription(project)}
-	image={project.thumbnail}
-	imageAlt={`${project.title} project thumbnail`}
+	image={ogImage}
+	imageAlt={`${project.title} project preview`}
 	canonicalPath={`/projects/${project.slug}/`}
 	background={project.background}
 	{...navigation}

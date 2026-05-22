@@ -51,12 +51,7 @@ function fileKey(file: Omit<ParsedFile, "image">) {
 	return file.suffix ? `${file.section}${file.suffix}` : String(file.section);
 }
 
-export function parseProjectImages(
-	slug: string,
-	sectionOrder?: number[],
-	sectionColumns?: Partial<Record<number, GridColumns>>,
-	sectionGroups?: SectionGroup[],
-): ProjectSection[] {
+function getProjectImageFiles(slug: string): ParsedFile[] {
 	const files: ParsedFile[] = [];
 
 	for (const [path, module] of Object.entries(projectImages)) {
@@ -68,10 +63,40 @@ export function parseProjectImages(
 		files.push({ ...parsed, image: module.default });
 	}
 
+	return files;
+}
+
+export function getProjectOgImage(
+	slug: string,
+	sectionOrder?: number[],
+	sectionColumns?: Partial<Record<number, GridColumns>>,
+	sectionGroups?: SectionGroup[],
+): ImageMetadata | undefined {
+	const files = getProjectImageFiles(slug);
+	const sectionOneSingle = files.find((file) => file.section === 1 && !file.suffix);
+	if (sectionOneSingle) return sectionOneSingle.image;
+
+	const sectionOneA = files.find((file) => file.section === 1 && file.suffix === "a");
+	if (sectionOneA) return sectionOneA.image;
+
+	const sections = parseProjectImages(slug, sectionOrder, sectionColumns, sectionGroups);
+	const firstSection = sections[0];
+	if (!firstSection) return undefined;
+
+	return firstSection.type === "single" ? firstSection.image : firstSection.images[0];
+}
+
+export function parseProjectImages(
+	slug: string,
+	sectionOrder?: number[],
+	sectionColumns?: Partial<Record<number, GridColumns>>,
+	sectionGroups?: SectionGroup[],
+): ProjectSection[] {
+	const files = getProjectImageFiles(slug);
 	if (sectionGroups) {
 		const byKey = new Map(files.map((file) => [fileKey(file), file.image]));
 
-		return sectionGroups.flatMap((group, index) => {
+		return sectionGroups.flatMap((group, index): ProjectSection[] => {
 			const images = group.files
 				.map((key) => byKey.get(key))
 				.filter((image): image is ImageMetadata => image !== undefined);
