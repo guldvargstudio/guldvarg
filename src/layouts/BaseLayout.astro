@@ -12,7 +12,7 @@ import {
 } from "../config/motion";
 import type { SiteNavigation } from "../data/projectNavigation";
 import { defaultPageBackground, getPageBgEnd } from "../data/projectBackground";
-import { clarityProjectId } from "../config/site";
+import { clarityProjectId, googleAnalyticsId } from "../config/site";
 import {
 	defaultOgImage,
 	defaultSiteDescription,
@@ -95,14 +95,28 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 		<ClientRouter fallback="swap" />
 		{
 			import.meta.env.PROD && (
-				<script
-					is:inline
-					set:html={`(function(c,l,a,r,i,t,y){
+				<>
+					<script
+						is:inline
+						async
+						src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
+					/>
+					<script
+						is:inline
+						set:html={`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${googleAnalyticsId}');`}
+					/>
+					<script
+						is:inline
+						set:html={`(function(c,l,a,r,i,t,y){
 c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
 t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
 y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 })(window, document, "clarity", "script", "${clarityProjectId}");`}
-				/>
+					/>
+				</>
 			)
 		}
 		<script>
@@ -110,6 +124,7 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 			import "../scripts/transitions.ts";
 			import "../scripts/contactEmail.ts";
 			import "../scripts/swipeNav.ts";
+			import "../scripts/gtag.ts";
 		</script>
 	</head>
 	<body data-page-bg-end={pageBgEnd}>
