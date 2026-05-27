@@ -180,7 +180,7 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 			by: "Deep Bluezen, Beta Tester",
 		},
 		tags: ["Game concept", "Art Direction", "SFX", "UI / UX", "Steam"],
-		background: projectBackground("#fdf1d7"),
+		background: projectBackground("#D6F0C2"),
 		sectionGroups: [
 			{ files: ["1a"] },
 			{ files: ["1b", "2a"], columns: "equal" },
