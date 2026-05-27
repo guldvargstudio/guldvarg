@@ -29,10 +29,9 @@ export const contactLinks: ContactLink[] = [
 ];
 
 export const skillsText = [
-	"I've specialized in UX, UI, design systems, and cohesive visual identities, with broad experience across both product design and development.",
-	"Over the years, I've worked across a wide range of digital projects and industries, giving me a strong ability to adapt, collaborate, and contribute strategically as well as creatively.",
-	"I'm highly proficient in modern UI/UX tools, with Figma being my primary tool of choice today.",
-	"I speak both Swedish and English fluently.",
+	"I've worked across most areas of digital design throughout my career, though UX, UI, design systems, and visual identity work have become recurring parts of my role. With a background in frontend development, I naturally enjoy bridging the gap between design and implementation.",
+	"Over the years, I've contributed to projects across a wide range of industries and disciplines, giving me a strong ability to adapt, collaborate, and contribute strategically as well as creatively.",
+	"I'm highly proficient in modern design tools, with Figma being my primary tool of choice today. I speak both Swedish and English fluently.",
 ];
 
 export const backgroundText = [
