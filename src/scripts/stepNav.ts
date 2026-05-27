@@ -1,5 +1,12 @@
 import { contentTransitionDurationMs } from "../config/motion";
 import { isInternalNavigationLink } from "../lib/navigation";
+import { freezePageBgAtDisplayedColor } from "../lib/pageBackground";
+import { storeNavDirection } from "../lib/slideNavigation";
+import {
+	findStepNavLinkAtPoint,
+	isViewTransitionAnimating,
+	skipActiveViewTransition,
+} from "../lib/viewTransition";
 import {
 	computeStepNavLayout,
 	computeVisibleDotWindow,
@@ -8,13 +15,14 @@ import {
 	STEP_NAV_DOT_MODIFIER_CLASSES,
 	type StepNavLayout,
 } from "../lib/stepNavLayout";
-import { getStepNavProjectCount, getStepNavStateFromLink } from "../lib/stepNavDirection";
+import { getStepNavProjectCount, getStepNavStateFromLink, resolveNavDirection } from "../lib/stepNavDirection";
 import {
 	readStepNavVisualState,
 	type StepNavVisualState,
 } from "../lib/stepNavState";
 import {
 	isTransitionBeforeSwapEvent,
+	navigate,
 	TRANSITION_AFTER_SWAP,
 	TRANSITION_BEFORE_SWAP,
 } from "astro:transitions/client";
@@ -227,21 +235,67 @@ function initStepNav() {
 	observeStepNavResize();
 }
 
+function activateStepNavLink(link: HTMLAnchorElement) {
+	const nextState = getStepNavStateFromLink(link);
+	if (!nextState) return false;
+
+	pendingStepNavState = nextState;
+	applyStepNavVisualState(nextState, true);
+	return true;
+}
+
+function resolveClickNavLink(event: MouseEvent) {
+	const target = event.target;
+	if (target instanceof Element) {
+		const link = target.closest("a[href]");
+		if (link instanceof HTMLAnchorElement) return link;
+	}
+
+	if (!isViewTransitionAnimating()) return null;
+	return findStepNavLinkAtPoint(event.clientX, event.clientY);
+}
+
+function interruptTransitionNavigation(link: HTMLAnchorElement, event: Event) {
+	if (!activateStepNavLink(link)) return;
+
+	event.preventDefault();
+	event.stopImmediatePropagation();
+
+	skipActiveViewTransition();
+	freezePageBgAtDisplayedColor();
+
+	const direction = resolveNavDirection(link);
+	if (direction) {
+		storeNavDirection(direction);
+	}
+
+	void navigate(link.href);
+}
+
+document.addEventListener(
+	"pointerdown",
+	(event) => {
+		if (!(event instanceof PointerEvent)) return;
+		if (!isViewTransitionAnimating()) return;
+
+		const link = findStepNavLinkAtPoint(event.clientX, event.clientY);
+		if (!link || !isInternalNavigationLink(link)) return;
+
+		interruptTransitionNavigation(link, event);
+	},
+	true,
+);
+
 document.addEventListener(
 	"click",
 	(event) => {
-		const target = event.target;
-		if (!(target instanceof Element)) return;
+		if (!(event instanceof MouseEvent)) return;
+		if (isViewTransitionAnimating()) return;
 
-		const link = target.closest("a[href]");
-		if (!(link instanceof HTMLAnchorElement)) return;
-		if (!isInternalNavigationLink(link)) return;
+		const link = resolveClickNavLink(event);
+		if (!link || !isInternalNavigationLink(link)) return;
 
-		const nextState = getStepNavStateFromLink(link);
-		if (!nextState) return;
-
-		pendingStepNavState = nextState;
-		applyStepNavVisualState(nextState, true);
+		activateStepNavLink(link);
 	},
 	true,
 );

@@ -1,4 +1,5 @@
 import {
+	contentSlideInEasingCss,
 	contentTransitionDurationCss,
 	contentTransitionEasingCss,
 } from "../config/motion";
@@ -27,7 +28,8 @@ import {
 } from "astro:transitions/client";
 
 const DURATION = contentTransitionDurationCss;
-const EASING = contentTransitionEasingCss;
+const SLIDE_OUT_EASING = contentTransitionEasingCss;
+const SLIDE_IN_EASING = contentSlideInEasingCss;
 const DEFAULT_PAGE_BG_END = getPageBgEnd();
 
 let pendingNavVisualState: StepNavVisualState | null = null;
@@ -50,10 +52,10 @@ function injectDirectionalSlide(newDocument: Document, direction: "prev" | "next
 				opacity: 0;
 			}
 			::view-transition-old(main) {
-				animation: ${DURATION} ${EASING} both slide-out-to-left;
+				animation: ${DURATION} ${SLIDE_OUT_EASING} both slide-out-to-left;
 			}
 			::view-transition-new(main) {
-				animation: ${DURATION} ${EASING} both slide-in-from-right;
+				animation: ${DURATION} ${SLIDE_IN_EASING} both slide-in-from-right;
 			}
 		`;
 	} else {
@@ -67,10 +69,10 @@ function injectDirectionalSlide(newDocument: Document, direction: "prev" | "next
 				opacity: 0;
 			}
 			::view-transition-old(main) {
-				animation: ${DURATION} ${EASING} both slide-out-to-right;
+				animation: ${DURATION} ${SLIDE_OUT_EASING} both slide-out-to-right;
 			}
 			::view-transition-new(main) {
-				animation: ${DURATION} ${EASING} both slide-in-from-left;
+				animation: ${DURATION} ${SLIDE_IN_EASING} both slide-in-from-left;
 			}
 		`;
 	}

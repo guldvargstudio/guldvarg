@@ -5,6 +5,7 @@ import StepNav from "../components/StepNav.astro";
 import stepNavStyles from "../components/StepNav.css?url";
 import globalStyles from "../styles/global.css?url";
 import {
+	contentSlideInEasingCss,
 	contentTransitionDurationCss,
 	contentTransitionEasingCss,
 	pageBgEasingCss,
@@ -90,6 +91,7 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 				--page-bg-transition-easing: {pageBgEasingCss};
 				--content-transition-duration: {contentTransitionDurationCss};
 				--content-transition-easing: {contentTransitionEasingCss};
+				--content-slide-in-easing: {contentSlideInEasingCss};
 			}
 		</style>
 		<ClientRouter fallback="swap" />

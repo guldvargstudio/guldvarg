@@ -147,9 +147,12 @@ body {
 	z-index: 1;
 }
 
-::view-transition-old(main),
-::view-transition-new(main) {
+::view-transition-old(main) {
 	animation-timing-function: var(--content-transition-easing);
+}
+
+::view-transition-new(main) {
+	animation-timing-function: var(--content-slide-in-easing);
 }
 
 ::view-transition {

@@ -1,5 +1,6 @@
 import { navigate } from "astro:transitions/client";
 import { freezePageBgAtDisplayedColor } from "./pageBackground";
+import { skipActiveViewTransition } from "./viewTransition";
 
 export function getStepNavHref(direction: "prev" | "next"): string | null {
 	const state = document.getElementById("step-nav-state");
@@ -23,6 +24,7 @@ export function navigateWithDirection(direction: "prev" | "next") {
 	const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
 	if (targetPath === currentPath) return;
 
+	skipActiveViewTransition();
 	freezePageBgAtDisplayedColor();
 	storeNavDirection(direction);
 	void navigate(href);
