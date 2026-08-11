@@ -1,3 +1,29 @@
 @import "../../components/HomeHero.css";
-@import "../../components/ProjectCard.css";
 @import "../../components/MainSeparator.css";
+
+.page:has(.home) {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: 0;
+	overflow-x: clip;
+}
+
+.page:has(.home) main {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.home {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+	gap: 0;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: 0;
+}

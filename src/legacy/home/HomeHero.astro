@@ -1,0 +1,48 @@
+---
+import logo from "../../assets/ui/logo-guldvarg.svg";
+import ContactEmailLink from "../../components/ContactEmailLink.astro";
+import UiIcon from "../../components/UiIcon.astro";
+import { contactLinks } from "../../data/about";
+
+interface Props {
+	selectedWorkHref: string;
+}
+
+const { selectedWorkHref } = Astro.props;
+
+const phone = contactLinks.find((link) => link.icon === "phone");
+---
+
+<section class="home-hero" aria-label="Guldvarg Studio">
+	<img
+		class="home-hero__logo"
+		src={logo.src}
+		alt="Guldvarg Studio — To save mankind"
+		width={303}
+		height={320}
+		loading="eager"
+		fetchpriority="high"
+	/>
+
+	<div class="home-hero__actions">
+		<ContactEmailLink class="home-hero__link home-hero__link--outline">
+			<UiIcon name="email" class="home-hero__icon" />
+		</ContactEmailLink>
+		{
+			phone && (
+				<a class="home-hero__link home-hero__link--outline" href={phone.href}>
+					<UiIcon name="phone" class="home-hero__icon" />
+					<span>{phone.label}</span>
+				</a>
+			)
+		}
+		<a
+			class="home-hero__link home-hero__link--cta"
+			href={selectedWorkHref}
+			data-nav-direction="next"
+		>
+			<span>Selected Work</span>
+			<UiIcon name="chevron" class="home-hero__icon" />
+		</a>
+	</div>
+</section>

@@ -103,6 +103,14 @@ body {
 	color: var(--color-brown-1);
 }
 
+body:has(.home) {
+	display: flex;
+	flex-direction: column;
+	height: 100dvh;
+	max-height: 100dvh;
+	overflow: hidden;
+}
+
 .page {
 	position: relative;
 	z-index: 2;
@@ -110,6 +118,8 @@ body {
 }
 
 .site-header {
+	position: relative;
+	z-index: 3;
 	min-height: var(--step-nav-height);
 	overflow: hidden;
 }
@@ -224,6 +234,14 @@ a.project-card:focus-visible .project-card__title {
 	padding: var(--page-content-offset) 0;
 }
 
+.page:has(.home) .home {
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: 0;
+	gap: 0;
+}
+
 @media (max-width: 1040px) {
 	:root {
 		--page-content-offset: 64px;
@@ -241,6 +259,10 @@ a.project-card:focus-visible .project-card__title {
 
 .home {
 	padding-top: max(0px, calc(var(--page-content-offset) - var(--step-nav-height)));
+}
+
+.page:has(.home) .home {
+	padding-top: 0;
 }
 
 @media (max-width: 768px) {

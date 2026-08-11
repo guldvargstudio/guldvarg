@@ -1,6 +1,8 @@
 :root {
 	/* Brown */
 	--color-brown-1: #2a1814;
+	--color-brown-2: #1c100d;
+	--color-brown-2-0: rgb(28 16 13 / 0);
 
 	/* Yellow */
 	--color-yellow: #ffc629;
@@ -14,6 +16,10 @@
 	--color-rust-2: #6b3d00;
 	--color-rust-1-20: rgba(158, 89, 0, 0.2);
 	--color-rust-1-10: rgba(158, 89, 0, 0.1);
+	--color-rust-1-60: rgba(158, 89, 0, 0.6);
+
+	/* Home */
+	--color-home-bg: var(--color-brown-2);
 
 	/* Semantic */
 	--color-hover: var(--color-brown-1);

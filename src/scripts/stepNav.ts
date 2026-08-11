@@ -96,6 +96,15 @@ function stateKey(state: StepNavVisualState): string {
 	return `${state.active}:${state.activeDotIndex ?? ""}`;
 }
 
+function syncStepNavVariant(doc: Document = document) {
+	const nav = document.querySelector(".step-nav");
+	if (!nav) return;
+
+	const stateElement = doc.getElementById("step-nav-state");
+	const variant = stateElement instanceof HTMLElement ? stateElement.dataset.stepNavVariant : undefined;
+	nav.classList.toggle("step-nav--dark", variant === "dark");
+}
+
 function applyStepNavVisualState(state: StepNavVisualState, force = false) {
 	const nav = document.querySelector(".step-nav");
 	if (!nav) return;
@@ -103,6 +112,7 @@ function applyStepNavVisualState(state: StepNavVisualState, force = false) {
 	const key = stateKey(state);
 	if (!force && key === lastAppliedStateKey) {
 		updateStepNavLayout(nav, state);
+		syncStepNavVariant();
 		return;
 	}
 	lastAppliedStateKey = key;
@@ -118,14 +128,8 @@ function applyStepNavVisualState(state: StepNavVisualState, force = false) {
 		aboutLabel.classList.toggle("step-nav__label--active", state.active === "about");
 	}
 
-	const hidden = state.active === "home";
-	nav.classList.toggle("step-nav--home-hidden", hidden);
-
-	if (hidden) {
-		nav.setAttribute("inert", "");
-	} else {
-		nav.removeAttribute("inert");
-	}
+	nav.classList.remove("step-nav--home-hidden");
+	nav.removeAttribute("inert");
 
 	const projectCount = getStepNavProjectCount();
 	const activePosition = getNavPosition(state, projectCount);
@@ -144,6 +148,7 @@ function applyStepNavVisualState(state: StepNavVisualState, force = false) {
 	});
 
 	updateStepNavLayout(nav, state);
+	syncStepNavVariant();
 }
 
 function resolveStepNavState(): StepNavVisualState {
@@ -178,6 +183,8 @@ export function syncStepNavLinks(doc: Document = document) {
 	const nav = document.querySelector(".step-nav");
 	if (!nav) return;
 
+	syncStepNavVariant(doc);
+
 	const stateElement = doc.getElementById("step-nav-state");
 	const source = stateElement instanceof HTMLElement ? stateElement : doc.body;
 	const { stepNavPrev, stepNavNext } = source.dataset;
@@ -209,7 +216,7 @@ function observeStepNavStateElement() {
 
 	stateObserver.observe(stateElement, {
 		attributes: true,
-		attributeFilter: ["data-step-nav-active", "data-step-nav-dot"],
+		attributeFilter: ["data-step-nav-active", "data-step-nav-dot", "data-step-nav-variant"],
 	});
 }
 

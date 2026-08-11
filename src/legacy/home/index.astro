@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import HomeHero from "../../components/HomeHero.astro";
+import MainSeparator from "../../components/MainSeparator.astro";
+import ProjectGrid from "../../components/ProjectGrid.astro";
+import { getSiteNavigation } from "../../data/projectNavigation";
+import { siteName } from "../../config/site";
+
+import homeStyles from "../../styles/pages/home.css?url";
+
+const navigation = getSiteNavigation("home");
+---
+
+<link rel="stylesheet" href={homeStyles} />
+
+<BaseLayout
+	seo={{ title: siteName, canonicalPath: "/" }}
+	navigation={navigation}
+>
+	<div class="home">
+		<HomeHero selectedWorkHref={navigation.nextHref} />
+		<ProjectGrid />
+		<MainSeparator />
+	</div>
+</BaseLayout>

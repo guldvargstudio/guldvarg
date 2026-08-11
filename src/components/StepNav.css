@@ -8,6 +8,23 @@
 	--step-nav-hover-duration: 0.4s;
 	--step-nav-hover-easing: cubic-bezier(0.34, 1.15, 0.64, 1);
 	--step-nav-gap: 16px;
+	--step-nav-btn-color: var(--color-rust-2);
+	--step-nav-btn-hover-color: var(--color-hover);
+	--step-nav-label-color: var(--color-rust-1-20);
+	--step-nav-label-active-color: var(--color-rust-2);
+	--step-nav-dot-color: var(--color-rust-1-20);
+	--step-nav-dot-active-color: var(--color-rust-2);
+	--step-nav-interactive-hover-color: var(--color-hover);
+}
+
+.step-nav--dark {
+	--step-nav-btn-color: var(--color-yellow);
+	--step-nav-btn-hover-color: var(--color-beige-1);
+	--step-nav-label-color: var(--color-rust-1-20);
+	--step-nav-label-active-color: var(--color-yellow);
+	--step-nav-dot-color: var(--step-nav-label-color);
+	--step-nav-dot-active-color: var(--color-yellow);
+	--step-nav-interactive-hover-color: var(--color-yellow);
 }
 
 .step-nav--home-hidden {
@@ -73,7 +90,7 @@
 }
 
 .step-nav a.step-nav__btn {
-	color: var(--color-rust-2);
+	color: var(--step-nav-btn-color);
 	transform: scale(1);
 	transition:
 		color var(--step-nav-transition-duration) var(--step-nav-transition-easing),
@@ -86,6 +103,7 @@
 
 .step-nav a.step-nav__btn:hover,
 .step-nav a.step-nav__btn:focus-visible {
+	color: var(--step-nav-btn-hover-color);
 	transform: scale(var(--step-nav-hover-scale));
 }
 
@@ -101,7 +119,7 @@
 	line-height: 1;
 	letter-spacing: 1.4px;
 	text-transform: uppercase;
-	color: var(--color-rust-1-20);
+	color: var(--step-nav-label-color);
 	white-space: nowrap;
 	flex-shrink: 0;
 	transform: scale(1);
@@ -112,11 +130,12 @@
 
 .step-nav a.step-nav__label:hover,
 .step-nav a.step-nav__label:focus-visible {
+	color: var(--step-nav-interactive-hover-color);
 	transform: scale(var(--step-nav-hover-scale));
 }
 
 .step-nav a.step-nav__label.step-nav__label--active {
-	color: var(--color-rust-2);
+	color: var(--step-nav-label-active-color);
 }
 
 .step-nav a.step-nav__dot {
@@ -133,7 +152,7 @@
 	width: 16px;
 	height: 16px;
 	border-radius: 50%;
-	background: var(--color-rust-1-20);
+	background: var(--step-nav-dot-color);
 	transform: scale(0.5);
 	transition:
 		transform var(--step-nav-hover-duration) var(--step-nav-hover-easing),
@@ -144,16 +163,11 @@
 .step-nav a.step-nav__dot:hover::before,
 .step-nav a.step-nav__dot:focus-visible::before {
 	transform: scale(calc(0.5 * var(--step-nav-dot-hover-scale)));
-	background-color: var(--color-hover);
+	background-color: var(--step-nav-interactive-hover-color);
 }
 
 .step-nav a.step-nav__dot--active::before {
-	background: var(--color-rust-2);
-}
-
-.step-nav a:hover,
-.step-nav a:focus-visible {
-	color: var(--color-hover);
+	background: var(--step-nav-dot-active-color);
 }
 
 .step-nav--compact a.step-nav__dot::before {

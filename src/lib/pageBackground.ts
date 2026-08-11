@@ -1,6 +1,17 @@
-import { pageBgTransitionMs } from "../config/motion";
-import { COLOR_BEIGE_1 } from "../config/designTokens";
+import { pageBgHomeTransitionMs, pageBgTransitionMs } from "../config/motion";
+import {
+	COLOR_BEIGE_1,
+	COLOR_HOME_BG,
+} from "../config/designTokens";
 import { runAfterContentSlide } from "./contentTransition";
+
+function isHomeThemeTransition(fromEnd: string, toEnd: string) {
+	return fromEnd === COLOR_HOME_BG || toEnd === COLOR_HOME_BG;
+}
+
+function getPageBgTransitionDuration(fromEnd: string, toEnd: string) {
+	return isHomeThemeTransition(fromEnd, toEnd) ? pageBgHomeTransitionMs : pageBgTransitionMs;
+}
 
 let displayedPageBgEnd = "";
 let frozenPageBgEnd = "";
@@ -8,8 +19,10 @@ let pageBgScheduleToken = 0;
 let colorAnimationToken = 0;
 let colorAnimationFrame: number | null = null;
 let colorAnimation: {
-	from: string;
-	to: string;
+	fromStart: string;
+	fromEnd: string;
+	toStart: string;
+	toEnd: string;
 	start: number;
 	duration: number;
 	token: number;
@@ -19,7 +32,24 @@ let pageBgElement: HTMLElement | null = null;
 let pageBgFillElement: HTMLElement | null = null;
 
 export function getPageBgGradient(endColor: string) {
-	return `linear-gradient(180deg, ${COLOR_BEIGE_1} 0%, ${endColor} 100%)`;
+	const { start, end } = getPageBgGradientStops(endColor);
+	return formatPageBgGradient(start, end);
+}
+
+function getPageBgGradientStops(endColor: string) {
+	if (endColor === COLOR_HOME_BG) {
+		return { start: COLOR_HOME_BG, end: COLOR_HOME_BG };
+	}
+
+	return { start: COLOR_BEIGE_1, end: endColor };
+}
+
+function formatPageBgGradient(startColor: string, endColor: string) {
+	if (startColor === endColor) {
+		return startColor;
+	}
+
+	return `linear-gradient(180deg, ${startColor} 0%, ${endColor} 100%)`;
 }
 
 export function getFrozenPageBgEnd() {
@@ -68,17 +98,27 @@ function easeOutCubic(amount: number) {
 	return 1 - Math.pow(1 - amount, 3);
 }
 
-function getAnimatedColorNow() {
-	if (!colorAnimation) return displayedPageBgEnd;
+function getAnimatedGradientStopsNow() {
+	if (!colorAnimation) {
+		return getPageBgGradientStops(displayedPageBgEnd);
+	}
 
-	const { from, to, start, duration } = colorAnimation;
-	if (start === 0) return from;
+	const { fromStart, fromEnd, toStart, toEnd, start, duration } = colorAnimation;
+	if (start === 0) {
+		return { start: fromStart, end: fromEnd };
+	}
 
 	const progress = Math.min(1, (performance.now() - start) / duration);
-	return lerpHexColor(from, to, easeOutCubic(progress));
+	const t = easeOutCubic(progress);
+
+	return {
+		start: lerpHexColor(fromStart, toStart, t),
+		end: lerpHexColor(fromEnd, toEnd, t),
+	};
 }
 
-function syncPageBgSolid(endColor: string) {
+function syncPageBgSolid(startColor: string, endColor: string) {
+	document.documentElement.style.setProperty("--page-bg-start", startColor);
 	document.documentElement.style.setProperty("--page-bg-end", endColor);
 	document.documentElement.style.backgroundColor = endColor;
 }
@@ -142,20 +182,25 @@ export function lockAllPageBgLayerStyles() {
 	lockPageBgLayerStyles(ensurePageBgFill());
 }
 
-function paintPageBg(endColor: string) {
+function paintPageBgGradient(startColor: string, endColor: string) {
 	const gradient = ensurePageBg();
 	const fill = ensurePageBgFill();
 
 	lockAllPageBgLayerStyles();
 	gradient.dataset.endColor = endColor;
-	gradient.style.background = getPageBgGradient(endColor);
+	gradient.style.background = formatPageBgGradient(startColor, endColor);
 	fill.style.backgroundColor = endColor;
-	syncPageBgSolid(endColor);
+	syncPageBgSolid(startColor, endColor);
 	displayedPageBgEnd = endColor;
 }
 
+function paintPageBg(endColor: string) {
+	const { start, end } = getPageBgGradientStops(endColor);
+	paintPageBgGradient(start, end);
+}
+
 export function pinFrozenPageBg() {
-	paintPageBg(displayedPageBgEnd);
+	paintPageBg(frozenPageBgEnd);
 }
 
 export function initPageBackground(defaultEnd: string) {
@@ -170,7 +215,7 @@ function revealPageBackground(endColor: string) {
 	pinFrozenPageBg();
 
 	requestAnimationFrame(() => {
-		applyPageBgEnd(endColor);
+		animatePageBgTo(endColor);
 	});
 }
 
@@ -194,7 +239,8 @@ function stopColorAnimation() {
 	}
 
 	if (colorAnimation) {
-		paintPageBg(getAnimatedColorNow());
+		const { start, end } = getAnimatedGradientStopsNow();
+		paintPageBgGradient(start, end);
 		colorAnimation = null;
 	}
 }
@@ -209,6 +255,7 @@ export function freezePageBgAtDisplayedColor() {
 
 function animatePageBgTo(endColor: string) {
 	if (displayedPageBgEnd === endColor && !colorAnimation) {
+		notifyPageBgTransitionComplete(endColor);
 		return;
 	}
 
@@ -217,6 +264,8 @@ function animatePageBgTo(endColor: string) {
 	if (reducedMotion) {
 		stopColorAnimation();
 		paintPageBg(endColor);
+		frozenPageBgEnd = endColor;
+		notifyPageBgTransitionComplete(endColor);
 		return;
 	}
 
@@ -227,12 +276,22 @@ function animatePageBgTo(endColor: string) {
 	}
 
 	const fromColor = displayedPageBgEnd;
-	const duration = pageBgTransitionMs;
+	const fromStops = getPageBgGradientStops(fromColor);
+	const toStops = getPageBgGradientStops(endColor);
+	const duration = getPageBgTransitionDuration(fromColor, endColor);
 	const token = ++colorAnimationToken;
 
-	paintPageBg(fromColor);
+	paintPageBgGradient(fromStops.start, fromStops.end);
 
-	colorAnimation = { from: fromColor, to: endColor, start: 0, duration, token };
+	colorAnimation = {
+		fromStart: fromStops.start,
+		fromEnd: fromStops.end,
+		toStart: toStops.start,
+		toEnd: toStops.end,
+		start: 0,
+		duration,
+		token,
+	};
 
 	const tick = (now: number) => {
 		if (token !== colorAnimationToken || !colorAnimation) return;
@@ -242,7 +301,10 @@ function animatePageBgTo(endColor: string) {
 		}
 
 		const progress = Math.min(1, (now - colorAnimation.start) / colorAnimation.duration);
-		paintPageBg(lerpHexColor(fromColor, endColor, easeOutCubic(progress)));
+		const t = easeOutCubic(progress);
+		const startColor = lerpHexColor(colorAnimation.fromStart, colorAnimation.toStart, t);
+		const endColorLerped = lerpHexColor(colorAnimation.fromEnd, colorAnimation.toEnd, t);
+		paintPageBgGradient(startColor, endColorLerped);
 
 		if (progress < 1) {
 			colorAnimationFrame = requestAnimationFrame(tick);
@@ -254,16 +316,16 @@ function animatePageBgTo(endColor: string) {
 		paintPageBg(endColor);
 		frozenPageBgEnd = endColor;
 		syncViewTransitionBackground(endColor);
+		notifyPageBgTransitionComplete(endColor);
 	};
 
 	colorAnimationFrame = requestAnimationFrame(tick);
 }
 
-function applyPageBgEnd(endColor: string) {
-	if (colorAnimation?.to === endColor) {
-		return;
-	}
-	animatePageBgTo(endColor);
+function notifyPageBgTransitionComplete(endColor: string) {
+	document.dispatchEvent(
+		new CustomEvent("page-bg-transition-complete", { detail: { endColor } }),
+	);
 }
 
 export function paintPageBgForTransition(endColor: string) {

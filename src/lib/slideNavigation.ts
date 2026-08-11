@@ -1,6 +1,15 @@
 import { navigate } from "astro:transitions/client";
+import { COLOR_HOME_BG } from "../config/designTokens";
 import { freezePageBgAtDisplayedColor } from "./pageBackground";
+import { animateHomeLeave } from "../scripts/homeGlow";
 import { skipActiveViewTransition } from "./viewTransition";
+
+function isHomePage() {
+	return (
+		document.body.dataset.pageBgEnd === COLOR_HOME_BG ||
+		document.querySelector(".home") !== null
+	);
+}
 
 export function getStepNavHref(direction: "prev" | "next"): string | null {
 	const state = document.getElementById("step-nav-state");
@@ -27,5 +36,12 @@ export function navigateWithDirection(direction: "prev" | "next") {
 	skipActiveViewTransition();
 	freezePageBgAtDisplayedColor();
 	storeNavDirection(direction);
-	void navigate(href);
+
+	void (async () => {
+		if (isHomePage()) {
+			await animateHomeLeave();
+		}
+
+		void navigate(href);
+	})();
 }

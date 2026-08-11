@@ -1,48 +1,41 @@
 ---
-import logo from "../assets/ui/logo-guldvarg.svg";
+import logo from "../assets/ui/logo-guldvarg-on-dark.svg";
 import ContactEmailLink from "./ContactEmailLink.astro";
-import UiIcon from "./UiIcon.astro";
+import MainSeparator from "./MainSeparator.astro";
 import { contactLinks } from "../data/about";
-
-interface Props {
-	selectedWorkHref: string;
-}
-
-const { selectedWorkHref } = Astro.props;
 
 const phone = contactLinks.find((link) => link.icon === "phone");
 ---
 
-<section class="home-hero" aria-label="Guldvarg Studio">
-	<img
-		class="home-hero__logo"
-		src={logo.src}
-		alt="Guldvarg Studio — To save mankind"
-		width={303}
-		height={320}
-		loading="eager"
-		fetchpriority="high"
-	/>
+<div class="home-landing">
+	<section class="home-hero" aria-label="Guldvarg Studio">
+		<img
+			class="home-hero__logo"
+			src={logo.src}
+			alt="Guldvarg Studio — To save mankind"
+			width={248}
+			height={282}
+			loading="eager"
+			fetchpriority="high"
+		/>
+	</section>
 
-	<div class="home-hero__actions">
-		<ContactEmailLink class="home-hero__link home-hero__link--outline">
-			<UiIcon name="email" class="home-hero__icon" />
-		</ContactEmailLink>
-		{
-			phone && (
-				<a class="home-hero__link home-hero__link--outline" href={phone.href}>
-					<UiIcon name="phone" class="home-hero__icon" />
-					<span>{phone.label}</span>
-				</a>
-			)
-		}
-		<a
-			class="home-hero__link home-hero__link--cta"
-			href={selectedWorkHref}
-			data-nav-direction="next"
-		>
-			<span>Selected Work</span>
-			<UiIcon name="chevron" class="home-hero__icon" />
-		</a>
-	</div>
-</section>
+	<footer class="home-footer">
+		<div class="home-footer__group">
+			<MainSeparator />
+			<div class="home-contact">
+				<ContactEmailLink class="home-contact__link">
+					<span data-contact-email-label></span>
+				</ContactEmailLink>
+				{
+					phone && (
+						<a class="home-contact__link" href={phone.href}>
+							{phone.label}
+						</a>
+					)
+				}
+				<span class="home-contact__link home-contact__link--muted">© Guldvarg Studio AB</span>
+			</div>
+		</div>
+	</footer>
+</div>

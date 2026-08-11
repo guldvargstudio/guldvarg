@@ -37,7 +37,6 @@ export function skipActiveViewTransition() {
 export function findStepNavLinkAtPoint(x: number, y: number) {
 	const nav = document.querySelector(".step-nav");
 	if (!(nav instanceof HTMLElement)) return null;
-	if (nav.classList.contains("step-nav--home-hidden")) return null;
 
 	for (const link of nav.querySelectorAll("a[href]")) {
 		if (!(link instanceof HTMLAnchorElement)) continue;
