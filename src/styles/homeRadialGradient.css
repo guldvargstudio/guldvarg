@@ -1,0 +1,23 @@
+#home-radial-gradient {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	--home-radial-gradient-size: min(1324px, 100vw, calc(100dvh - var(--step-nav-height)));
+	--home-radial-gradient-center: rgb(42 24 20 / 0.80);
+	width: var(--home-radial-gradient-size);
+	height: var(--home-radial-gradient-size);
+	pointer-events: none;
+	view-transition-name: none;
+	transform: translate(-50%, -50%) scale(0);
+	background-color: transparent;
+	background-image: radial-gradient(circle farthest-side at 50% 50%,
+			var(--home-radial-gradient-center) 0%,
+			var(--color-brown-2-0) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	#home-radial-gradient {
+		display: none;
+	}
+}

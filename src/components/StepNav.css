@@ -18,8 +18,8 @@
 }
 
 .step-nav--dark {
-	--step-nav-btn-color: var(--color-yellow);
-	--step-nav-btn-hover-color: var(--color-beige-1);
+	--step-nav-btn-color: var(--color-rust-1-20);
+	--step-nav-btn-hover-color: var(--color-yellow);
 	--step-nav-label-color: var(--color-rust-1-20);
 	--step-nav-label-active-color: var(--color-yellow);
 	--step-nav-dot-color: var(--step-nav-label-color);

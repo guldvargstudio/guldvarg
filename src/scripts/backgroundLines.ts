@@ -1,4 +1,4 @@
-type FieldPoint = {
+type LinePoint = {
 	bx: number;
 	by: number;
 	x: number;
@@ -6,13 +6,15 @@ type FieldPoint = {
 };
 
 import {
-	homeFieldDebugFullOpacity,
-	homeFieldLineOpacityDefault,
-	homeFieldLineOpacityHome,
+	backgroundLinesFadeInTransitionMs,
+	backgroundLinesOpacityDefault,
+	backgroundLinesOpacityHome,
 } from "../config/motion";
-import { COLOR_HOME_BG } from "../config/designTokens";
+import { isHomePage } from "../lib/isHomePage";
+import { runAfterContentSlide } from "../lib/contentTransition";
+import { TRANSITION_AFTER_SWAP } from "astro:transitions/client";
 
-const FIELD_RGB = "158, 89, 0";
+const LINE_RGB = "158, 89, 0";
 const GRID_CELL_PX = 32;
 const FIELD_BLEED_RATIO = 0.16;
 const TERRAIN_DRIFT = 0.12;
@@ -26,7 +28,7 @@ let canvas: HTMLCanvasElement | null = null;
 let context: CanvasRenderingContext2D | null = null;
 let animationFrame = 0;
 let rows = 0;
-let verticalLines: FieldPoint[][] = [];
+let verticalLines: LinePoint[][] = [];
 let width = 0;
 let height = 0;
 let running = false;
@@ -38,20 +40,11 @@ const pointer = {
 	active: false,
 };
 
-function isHomeFieldHomeTheme() {
-	return (
-		document.body.dataset.pageBgEnd === COLOR_HOME_BG ||
-		document.querySelector(".home") !== null
-	);
-}
-
-function getFieldStrokeColor() {
-	if (homeFieldDebugFullOpacity) {
-		return `rgba(${FIELD_RGB}, 1)`;
-	}
-
-	const alpha = isHomeFieldHomeTheme() ? homeFieldLineOpacityHome : homeFieldLineOpacityDefault;
-	return `rgba(${FIELD_RGB}, ${alpha})`;
+function getLineStrokeColor() {
+	const alpha = isHomePage()
+		? backgroundLinesOpacityHome
+		: backgroundLinesOpacityDefault;
+	return `rgba(${LINE_RGB}, ${alpha})`;
 }
 
 function prefersReducedMotion() {
@@ -63,7 +56,7 @@ function prefersCoarsePointer() {
 }
 
 function getCanvas() {
-	const element = document.getElementById("home-field");
+	const element = document.getElementById("background-lines");
 	return element instanceof HTMLCanvasElement ? element : null;
 }
 
@@ -183,7 +176,7 @@ function buildGrid(nextWidth: number, nextHeight: number) {
 	const columnXs = buildColumnPositions(width, bleed);
 
 	verticalLines = columnXs.map((bx) => {
-		const linePoints: FieldPoint[] = [];
+		const linePoints: LinePoint[] = [];
 
 		for (let row = 0; row <= rows; row += 1) {
 			const by = minY + row * stepY;
@@ -246,7 +239,7 @@ function updatePoints(time: number) {
 
 function drawSmoothPolyline(
 	context: CanvasRenderingContext2D,
-	polyline: FieldPoint[],
+	polyline: LinePoint[],
 ) {
 	const count = polyline.length;
 	if (count < 2) return;
@@ -274,11 +267,11 @@ function drawSmoothPolyline(
 	context.stroke();
 }
 
-function drawField() {
+function drawLines() {
 	if (!context || !canvas) return;
 
 	context.clearRect(0, 0, width, height);
-	context.strokeStyle = getFieldStrokeColor();
+	context.strokeStyle = getLineStrokeColor();
 	context.lineWidth = 1;
 	context.lineCap = "round";
 	context.lineJoin = "round";
@@ -292,7 +285,7 @@ function tick(now: number) {
 	if (!running) return;
 
 	updatePoints(now * 0.001);
-	drawField();
+	drawLines();
 	animationFrame = requestAnimationFrame(tick);
 }
 
@@ -327,7 +320,7 @@ function bindPointerEvents() {
 	);
 }
 
-export function startHomeField() {
+export function startBackgroundLines() {
 	if (prefersReducedMotion()) return;
 
 	canvas = getCanvas();
@@ -339,7 +332,7 @@ export function startHomeField() {
 	animationFrame = requestAnimationFrame(tick);
 }
 
-export function stopHomeField() {
+export function stopBackgroundLines() {
 	running = false;
 	pointer.active = false;
 
@@ -353,24 +346,134 @@ export function stopHomeField() {
 	}
 }
 
-export function resizeHomeField() {
+export function resizeBackgroundLines() {
 	if (!getCanvas()) return;
 	resizeCanvas();
 	if (running) {
-		drawField();
+		drawLines();
 	}
 }
 
-export function initHomeField() {
-	resizeHomeField();
+export function initBackgroundLines() {
+	resizeBackgroundLines();
 }
 
-initHomeField();
+let handledClientSwap = false;
+let shellOpacity = 0;
+let fadeFrame: number | null = null;
+let fadeToken = 0;
+
+function getShell() {
+	return document.getElementById("background-lines-shell");
+}
+
+function applyShellOpacity(value: number) {
+	const shell = getShell();
+	shellOpacity = value;
+	if (!shell) return;
+	shell.style.opacity = String(value);
+}
+
+function easeOutCubic(progress: number) {
+	return 1 - Math.pow(1 - progress, 3);
+}
+
+function stopFade() {
+	fadeToken += 1;
+	if (fadeFrame !== null) {
+		cancelAnimationFrame(fadeFrame);
+		fadeFrame = null;
+	}
+}
+
+function prepareBackgroundLines() {
+	initBackgroundLines();
+	resizeBackgroundLines();
+	startBackgroundLines();
+}
+
+function fadeBackgroundLinesIn(options?: { instant?: boolean }) {
+	if (prefersReducedMotion()) return Promise.resolve();
+
+	prepareBackgroundLines();
+
+	if (options?.instant) {
+		stopFade();
+		applyShellOpacity(1);
+		return Promise.resolve();
+	}
+
+	const token = ++fadeToken;
+
+	return new Promise<void>((resolve) => {
+		const shell = getShell();
+		if (!shell) {
+			shellOpacity = 1;
+			resolve();
+			return;
+		}
+
+		const from = shellOpacity;
+		if (Math.abs(from - 1) < 0.005) {
+			applyShellOpacity(1);
+			resolve();
+			return;
+		}
+
+		const start = performance.now();
+		const durationMs = backgroundLinesFadeInTransitionMs;
+
+		const tick = (now: number) => {
+			if (token !== fadeToken) {
+				resolve();
+				return;
+			}
+
+			const progress = Math.min(1, (now - start) / durationMs);
+			applyShellOpacity(from + (1 - from) * easeOutCubic(progress));
+
+			if (progress < 1) {
+				fadeFrame = requestAnimationFrame(tick);
+				return;
+			}
+
+			fadeFrame = null;
+			applyShellOpacity(1);
+			resolve();
+		};
+
+		if (fadeFrame !== null) {
+			cancelAnimationFrame(fadeFrame);
+		}
+
+		fadeFrame = requestAnimationFrame(tick);
+	});
+}
+
+initBackgroundLines();
 
 window.addEventListener("resize", () => {
-	if (document.getElementById("home-field")) {
-		resizeHomeField();
+	if (getCanvas()) {
+		resizeBackgroundLines();
 	}
 });
 
-document.addEventListener("astro:page-load", initHomeField);
+document.addEventListener(TRANSITION_AFTER_SWAP, () => {
+	handledClientSwap = true;
+	stopFade();
+	applyShellOpacity(0);
+	prepareBackgroundLines();
+
+	runAfterContentSlide(() => {
+		void fadeBackgroundLinesIn();
+	});
+});
+
+document.addEventListener("astro:page-load", () => {
+	if (!handledClientSwap) {
+		void fadeBackgroundLinesIn();
+	}
+
+	handledClientSwap = false;
+	initBackgroundLines();
+});

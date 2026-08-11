@@ -3,7 +3,7 @@ import {
 	homeLogoLeaveEasingCss,
 	homeLogoTransitionMs,
 } from "../config/motion";
-import { COLOR_HOME_BG } from "../config/designTokens";
+import { isHomePage } from "../lib/isHomePage";
 
 const LOGO_LEAVE_PEAK_SCALE = 1.08;
 const LOGO_ENTER_OVERSHOOT_SCALE = 1.06;
@@ -21,13 +21,6 @@ let targetRotateY = 0;
 let currentRotateX = 0;
 let currentRotateY = 0;
 let tiltFrame = 0;
-
-function isHomePage() {
-	return (
-		document.body.dataset.pageBgEnd === COLOR_HOME_BG ||
-		document.querySelector(".home") !== null
-	);
-}
 
 function getHomeLogo() {
 	return document.querySelector<HTMLElement>(".home-hero__logo");

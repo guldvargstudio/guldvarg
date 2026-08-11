@@ -4,13 +4,12 @@ import type { ImageMetadata } from "astro";
 import StepNav from "../components/StepNav.astro";
 import stepNavStyles from "../components/StepNav.css?url";
 import globalStyles from "../styles/global.css?url";
-import homeFieldStyles from "../styles/homeField.css?url";
+import backgroundLinesStyles from "../styles/backgroundLines.css?url";
+import homeRadialGradientStyles from "../styles/homeRadialGradient.css?url";
 import {
 	contentSlideInEasingCss,
 	contentTransitionDurationCss,
 	contentTransitionEasingCss,
-	pageBgEasingCss,
-	pageBgTransitionCss,
 } from "../config/motion";
 import type { SiteNavigation } from "../data/projectNavigation";
 import { defaultPageBackground, getPageBgEnd } from "../data/projectBackground";
@@ -87,11 +86,10 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 		<meta name="twitter:image:alt" content={imageAlt} />
 		<link rel="stylesheet" href={globalStyles} />
 		<link rel="stylesheet" href={stepNavStyles} />
-		<link rel="stylesheet" href={homeFieldStyles} />
+		<link rel="stylesheet" href={backgroundLinesStyles} />
+		<link rel="stylesheet" href={homeRadialGradientStyles} />
 		<style is:global>
 			:root {
-				--page-bg-transition-duration: {pageBgTransitionCss};
-				--page-bg-transition-easing: {pageBgEasingCss};
 				--content-transition-duration: {contentTransitionDurationCss};
 				--content-transition-easing: {contentTransitionEasingCss};
 				--content-slide-in-easing: {contentSlideInEasingCss};
@@ -128,7 +126,9 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 			import "../scripts/stepNav.ts";
 			import "../scripts/siteHeader.ts";
 			import "../scripts/transitions.ts";
-			import "../scripts/homeGlow.ts";
+			import "../scripts/backgroundLines.ts";
+			import "../scripts/homePageEffects.ts";
+			import "../scripts/homeRadialGradient.ts";
 			import "../scripts/contactEmail.ts";
 			import "../scripts/swipeNav.ts";
 			import "../scripts/gtag.ts";
@@ -158,13 +158,19 @@ y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
 			aria-hidden="true"
 		></div>
 		<div
-			id="home-field-shell"
-			transition:persist="home-field"
-			transition:name="home-field"
+			id="home-radial-gradient"
+			transition:persist="home-radial-gradient"
+			transition:animate="none"
+			aria-hidden="true"
+		></div>
+		<div
+			id="background-lines-shell"
+			transition:persist="background-lines"
+			transition:name="background-lines"
 			transition:animate="none"
 			aria-hidden="true"
 		>
-			<canvas id="home-field"></canvas>
+			<canvas id="background-lines"></canvas>
 		</div>
 		<div id="site-header-stack" class="site-header-stack">
 			<div id="site-header-backdrop" class="site-header-backdrop" aria-hidden="true"></div>

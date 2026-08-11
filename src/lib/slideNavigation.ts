@@ -1,15 +1,8 @@
 import { navigate } from "astro:transitions/client";
-import { COLOR_HOME_BG } from "../config/designTokens";
+import { isHomePage } from "./isHomePage";
 import { freezePageBgAtDisplayedColor } from "./pageBackground";
-import { animateHomeLeave } from "../scripts/homeGlow";
+import { animateHomeLeave } from "../scripts/homePageEffects";
 import { skipActiveViewTransition } from "./viewTransition";
-
-function isHomePage() {
-	return (
-		document.body.dataset.pageBgEnd === COLOR_HOME_BG ||
-		document.querySelector(".home") !== null
-	);
-}
 
 export function getStepNavHref(direction: "prev" | "next"): string | null {
 	const state = document.getElementById("step-nav-state");
