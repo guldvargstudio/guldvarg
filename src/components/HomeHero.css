@@ -90,7 +90,7 @@
 
 @media (max-width: 640px) {
 	.home-footer {
-		padding-bottom: 32px;
+		padding-bottom: max(48px, calc(24px + env(safe-area-inset-bottom, 0px)));
 	}
 
 	.home-footer__group {

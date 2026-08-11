@@ -27,3 +27,10 @@
 	margin: 0;
 	padding: 0;
 }
+
+@media (max-width: 640px) {
+	body:has(.home) {
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+}
