@@ -42,6 +42,16 @@
 	--nav-padding-y: 40px;
 	--step-nav-inner-height: 36px;
 	--step-nav-height: calc(var(--nav-padding-y) * 2 + var(--step-nav-inner-height));
+	--site-header-scrolled-bg: rgba(255, 250, 235, 0.80);
+	--site-header-scrolled-bg-dark: rgba(28, 16, 13, 0.72);
+	--site-header-scrolled-blur: 32px;
+	--site-header-scrolled-bleed: 4px;
+	--site-header-cap-bg: var(--color-beige-1);
+	--site-header-cap-bg-dark: var(--color-home-bg);
+	--site-header-scrolled-shadow: 0 4px 14px rgba(42, 24, 20, 0.05);
+	--site-header-scrolled-shadow-dark: 0 4px 16px rgba(0, 0, 0, 0.18);
+	--site-header-slide-duration: 0.4s;
+	--site-header-slide-easing: cubic-bezier(0.22, 1, 0.36, 1);
 	--page-content-offset: 128px;
 	--page-section-gap: 128px;
 	--project-gallery-gap: 64px;

@@ -41,7 +41,6 @@ export function navigateWithDirection(direction: "prev" | "next") {
 		if (isHomePage()) {
 			await animateHomeLeave();
 		}
-
 		void navigate(href);
 	})();
 }

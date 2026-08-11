@@ -4,20 +4,33 @@ import ContactEmailLink from "./ContactEmailLink.astro";
 import MainSeparator from "./MainSeparator.astro";
 import { contactLinks } from "../data/about";
 
+interface Props {
+	nextHref: string;
+}
+
+const { nextHref } = Astro.props;
+
 const phone = contactLinks.find((link) => link.icon === "phone");
 ---
 
 <div class="home-landing">
 	<section class="home-hero" aria-label="Guldvarg Studio">
-		<img
-			class="home-hero__logo"
-			src={logo.src}
-			alt="Guldvarg Studio — To save mankind"
-			width={248}
-			height={282}
-			loading="eager"
-			fetchpriority="high"
-		/>
+		<a
+			class="home-hero__logo-link"
+			href={nextHref}
+			data-nav-direction="next"
+			aria-label="Next"
+		>
+			<img
+				class="home-hero__logo"
+				src={logo.src}
+				alt="Guldvarg Studio — To save mankind"
+				width={248}
+				height={282}
+				loading="eager"
+				fetchpriority="high"
+			/>
+		</a>
 	</section>
 
 	<footer class="home-footer">
