@@ -150,10 +150,8 @@ document.addEventListener(TRANSITION_AFTER_SWAP, () => {
 });
 
 document.addEventListener("astro:page-load", () => {
-	if (handledByClientSwap) {
-		handledByClientSwap = false;
-		return;
-	}
+	const wasClientSwap = handledByClientSwap;
+	handledByClientSwap = false;
 
 	const endColor = document.body.dataset.pageBgEnd;
 
@@ -167,8 +165,18 @@ document.addEventListener("astro:page-load", () => {
 			return;
 		}
 
-		pinFrozenPageBg();
+		if (!wasClientSwap) {
+			pinFrozenPageBg();
+		}
 	});
 });
 
-initPageBackground(DEFAULT_PAGE_BG_END);
+function bootstrapPageBackground() {
+	initPageBackground(DEFAULT_PAGE_BG_END);
+}
+
+if (document.body?.dataset.pageBgEnd) {
+	bootstrapPageBackground();
+} else {
+	document.addEventListener("DOMContentLoaded", bootstrapPageBackground, { once: true });
+}

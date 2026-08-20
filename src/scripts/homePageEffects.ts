@@ -73,7 +73,7 @@ function syncHomePageEffects() {
 document.addEventListener(TRANSITION_AFTER_SWAP, () => {
 	handledClientSwap = true;
 
-	if (document.body.dataset.pageBgEnd === COLOR_HOME_BG) {
+	if (isHomePage()) {
 		resetHomeRadialGradientOnHomeArrival();
 		hideHomeLogoInstant();
 		requestAnimationFrame(() => {
@@ -90,7 +90,7 @@ document.addEventListener("astro:page-load", () => {
 	if (handledClientSwap) {
 		handledClientSwap = false;
 
-		if (document.body.dataset.pageBgEnd === COLOR_HOME_BG) {
+		if (isHomePage()) {
 			resetHomeRadialGradientOnHomeArrival();
 			hideHomeLogoInstant();
 		}

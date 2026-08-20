@@ -10,7 +10,7 @@ import {
 	backgroundLinesOpacityDefault,
 	backgroundLinesOpacityHome,
 } from "../config/motion";
-import { isHomePage } from "../lib/isHomePage";
+import { hasHomeBackground } from "../lib/isHomePage";
 import { runAfterContentSlide } from "../lib/contentTransition";
 import { TRANSITION_AFTER_SWAP } from "astro:transitions/client";
 
@@ -41,7 +41,7 @@ const pointer = {
 };
 
 function getLineStrokeColor() {
-	const alpha = isHomePage()
+	const alpha = hasHomeBackground()
 		? backgroundLinesOpacityHome
 		: backgroundLinesOpacityDefault;
 	return `rgba(${LINE_RGB}, ${alpha})`;

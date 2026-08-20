@@ -29,7 +29,7 @@
 	line-height: 1.1;
 	letter-spacing: 2.4px;
 	text-transform: uppercase;
-	color: var(--color-rust-1);
+	color: var(--color-beige-1);
 }
 
 .about-label {
@@ -40,7 +40,7 @@
 	line-height: 1;
 	letter-spacing: var(--letter-spacing-caps-sm);
 	text-transform: uppercase;
-	color: var(--color-rust-1);
+	color: var(--color-beige-2);
 }
 
 .about-body {
@@ -49,7 +49,7 @@
 	font-size: 16px;
 	font-weight: 400;
 	line-height: normal;
-	color: var(--color-brown-1);
+	color: var(--color-beige-1);
 }
 
 .about-body p {
@@ -91,7 +91,7 @@
 
 .about-contact__link:hover,
 .about-contact__link:focus-visible {
-	color: var(--color-hover);
+	color: var(--color-yellow);
 }
 
 .about-contact__icon {
@@ -134,7 +134,7 @@
 	line-height: 1.1;
 	letter-spacing: 2.4px;
 	text-transform: uppercase;
-	color: var(--color-brown-1);
+	color: var(--color-beige-1);
 }
 
 .about-education__description {
@@ -144,7 +144,7 @@
 	font-style: italic;
 	font-weight: 400;
 	line-height: normal;
-	color: var(--color-rust-2);
+	color: var(--color-beige-2);
 }
 
 @media (max-width: 1040px) {

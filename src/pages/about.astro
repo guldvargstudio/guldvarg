@@ -3,6 +3,7 @@ import AboutContent from "../components/AboutContent.astro";
 import MainSeparator from "../components/MainSeparator.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getSiteNavigation } from "../data/projectNavigation";
+import { homePageBackground } from "../data/projectBackground";
 import { truncateDescription } from "../lib/socialMeta";
 import { skillsText } from "../data/about";
 
@@ -21,6 +22,8 @@ const aboutDescription = truncateDescription(skillsText[0]);
 		canonicalPath: "/about/",
 	}}
 	navigation={navigation}
+	background={homePageBackground}
+	theme="dark"
 >
 	<div class="about">
 		<AboutContent />

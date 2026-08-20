@@ -25,5 +25,5 @@ export const contentSlideInEasingCss = "cubic-bezier(0.22, 1.14, 0.36, 1)";
 /** Line stroke alpha on the home page. */
 export const backgroundLinesOpacityHome = 0.12;
 
-/** Line stroke alpha on project/about pages. */
+/** Line stroke alpha on project pages (light background). */
 export const backgroundLinesOpacityDefault = 0.06;
