@@ -7,10 +7,10 @@ import { isHomePage } from "../lib/isHomePage";
 
 const LOGO_LEAVE_PEAK_SCALE = 1.08;
 const LOGO_ENTER_OVERSHOOT_SCALE = 1.06;
-const LOGO_TILT_MAX_DEG = 10;
-const LOGO_TILT_LERP = 0.12;
+const LOGO_TILT_MAX_DEG = 14;
+const LOGO_TILT_LERP = 0.13;
 const LOGO_TILT_EPSILON = 0.05;
-const LOGO_TILT_INFLUENCE = 0.42;
+const LOGO_TILT_INFLUENCE = 0.35;
 
 let leaveAnimation: Promise<void> | null = null;
 let tiltLink: HTMLElement | null = null;
