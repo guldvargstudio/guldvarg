@@ -347,10 +347,13 @@ a.project-card:focus-visible .project-card__title {
 		--project-gallery-grid-gap: 8px;
 	}
 
-	.project,
-	.about {
+	.project {
 		--page-content-offset: 32px;
 		--page-section-gap: 32px;
+	}
+
+	.about {
+		padding-top: 16px;
 	}
 }
 
