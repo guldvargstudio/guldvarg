@@ -1,6 +1,10 @@
+type EducationTitlePart =
+	| { type: "link"; label: string; href: string }
+	| { type: "text"; label: string; muted?: boolean };
+
 type EducationEntry = {
 	years: string;
-	title: string;
+	title: EducationTitlePart[];
 	description: string;
 };
 
@@ -42,24 +46,28 @@ export const backgroundText = [
 export const education: EducationEntry[] = [
 	{
 		years: "2013 - 2014",
-		title: "Hack Design",
+		title: [{ type: "link", label: "Hack Design", href: "https://www.hackdesign.org" }],
 		description:
 			"User Experience, Interface Design, Interaction Design, Graphic Design, Typography",
 	},
 	{
 		years: "2000 - 2001",
-		title: "Konstfack & Beckmans",
+		title: [
+			{ type: "link", label: "Konstfack", href: "https://www.konstfack.se/en/" },
+			{ type: "text", label: " & ", muted: true },
+			{ type: "link", label: "Beckmans", href: "https://beckmans.se" },
+		],
 		description:
 			"I was hired as an assistant teacher to lecture about vector design, animations and interactivity for a few occasions.",
 	},
 	{
 		years: "1998 - 1999",
-		title: "RMI Berghs",
+		title: [{ type: "link", label: "RMI Berghs", href: "https://www.berghs.se" }],
 		description: "Influence Theory, Communication, Marketing",
 	},
 	{
 		years: "1995 - 1997",
-		title: "Mediagymnasiet",
+		title: [{ type: "link", label: "Mediagymnasiet", href: "https://nackastrandsgymnasium.se" }],
 		description: "Design, Media, Web, Radio & TV Production",
 	},
 ];

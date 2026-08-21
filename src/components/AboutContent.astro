@@ -74,7 +74,29 @@ import { backgroundText, contactLinks, education, skillsText } from "../data/abo
 				education.map((entry) => (
 					<li class="about-education__item">
 						<p class="about-label">{entry.years}</p>
-						<p class="about-education__title">{entry.title}</p>
+						<p class="about-education__title">
+							{entry.title.map((part) =>
+								part.type === "link" ? (
+									<a
+										class="about-education__title-link"
+										href={part.href}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										{part.label}
+									</a>
+								) : (
+									<span
+										class:list={[
+											"about-education__title-text",
+											{ "about-education__title-text--muted": part.muted },
+										]}
+									>
+										{part.label}
+									</span>
+								),
+							)}
+						</p>
 						<p class="about-education__description">{entry.description}</p>
 					</li>
 				))

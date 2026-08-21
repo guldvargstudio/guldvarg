@@ -134,7 +134,25 @@
 	line-height: 1.1;
 	letter-spacing: 2.4px;
 	text-transform: uppercase;
-	color: var(--color-beige-1);
+}
+
+.about-education__title-link {
+	color: var(--color-rust-1);
+	text-decoration: none;
+	transition: var(--transition-interactive);
+}
+
+.about-education__title-link:hover,
+.about-education__title-link:focus-visible {
+	color: var(--color-yellow);
+}
+
+.about-education__title-text {
+	color: var(--color-rust-1);
+}
+
+.about-education__title-text--muted {
+	color: var(--color-rust-1-60);
 }
 
 .about-education__description {
@@ -192,7 +210,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.about-contact__link {
+	.about-contact__link,
+	.about-education__title-link {
 		transition: none;
 	}
 }
