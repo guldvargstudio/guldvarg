@@ -18,7 +18,7 @@
 }
 
 .step-nav--dark {
-	--step-nav-btn-color: var(--color-rust-1-20);
+	--step-nav-btn-color: var(--color-rust-1-60);
 	--step-nav-btn-hover-color: var(--color-yellow);
 	--step-nav-label-color: var(--color-rust-1-20);
 	--step-nav-label-active-color: var(--color-yellow);

@@ -91,12 +91,13 @@
 	color: var(--color-yellow);
 }
 
-.home-contact__link--muted {
-	color: var(--color-rust-1-60);
-}
-
-.home-contact__link--muted:hover,
-.home-contact__link--muted:focus-visible {
+.home-contact__copyright {
+	font-family: var(--font-display);
+	font-size: var(--font-size-caps-sm);
+	font-weight: 600;
+	line-height: 1;
+	letter-spacing: var(--letter-spacing-caps-sm);
+	text-transform: uppercase;
 	color: var(--color-rust-1);
 }
 
