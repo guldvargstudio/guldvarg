@@ -29,7 +29,7 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 	{
 		slug: "ohgarden",
 		title: "Oh!Garden",
-		years: "2025 - Ongoing",
+		years: "2024 - Ongoing",
 		intro:
 			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
 		quote: {
