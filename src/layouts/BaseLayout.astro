@@ -15,7 +15,11 @@ import type { SiteNavigation } from "../data/projectNavigation";
 import { defaultPageBackground, getPageBgEnd } from "../data/projectBackground";
 import { clarityProjectId, googleAnalyticsId } from "../config/site";
 import {
+	buildOrganizationJsonLd,
+	buildWebsiteJsonLd,
 	defaultOgImage,
+	defaultOgImageHeight,
+	defaultOgImageWidth,
 	defaultSiteDescription,
 	siteName,
 	toAbsoluteUrl,
@@ -43,10 +47,15 @@ const {
 
 const pageBackground = background ?? defaultPageBackground;
 const pageBgEnd = getPageBgEnd(pageBackground);
-const canonicalURL = toAbsoluteUrl(canonicalPath ?? Astro.url.pathname, Astro.site!);
+const site = Astro.site!;
+const canonicalURL = toAbsoluteUrl(canonicalPath ?? Astro.url.pathname, site);
 const shareImageUrl =
-	typeof image === "string" ? toAbsoluteUrl(image, Astro.site!) : toImageUrl(image, Astro.site!);
-const shareImageDimensions = typeof image === "string" ? null : image;
+	typeof image === "string" ? toAbsoluteUrl(image, site) : toImageUrl(image, site);
+const shareImageWidth =
+	typeof image === "string" ? defaultOgImageWidth : image.width;
+const shareImageHeight =
+	typeof image === "string" ? defaultOgImageHeight : image.height;
+const structuredData = [buildOrganizationJsonLd(site), buildWebsiteJsonLd(site)];
 ---
 
 <!doctype html>
@@ -71,19 +80,17 @@ const shareImageDimensions = typeof image === "string" ? null : image;
 		<meta property="og:description" content={description} />
 		<meta property="og:image" content={shareImageUrl} />
 		<meta property="og:image:alt" content={imageAlt} />
-		{
-			shareImageDimensions?.width && shareImageDimensions?.height && (
-				<>
-					<meta property="og:image:width" content={String(shareImageDimensions.width)} />
-					<meta property="og:image:height" content={String(shareImageDimensions.height)} />
-				</>
-			)
-		}
+		<meta property="og:image:width" content={String(shareImageWidth)} />
+		<meta property="og:image:height" content={String(shareImageHeight)} />
 		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={shareImageUrl} />
 		<meta name="twitter:image:alt" content={imageAlt} />
+		<script
+			type="application/ld+json"
+			set:html={JSON.stringify(structuredData)}
+		/>
 		<link rel="stylesheet" href={globalStyles} />
 		<link rel="stylesheet" href={stepNavStyles} />
 		<link rel="stylesheet" href={backgroundLinesStyles} />
