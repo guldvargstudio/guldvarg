@@ -27,19 +27,6 @@ export type ProjectMeta = {
 
 const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 	{
-		slug: "ohgarden",
-		title: "Oh!Garden",
-		years: "2024 - Ongoing",
-		intro:
-			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
-		quote: {
-			text: "Kristofer is a highly skilled UX/UI designer with a strong combination of creativity, structure, and systematic thinking. He laid the foundation for our design system and significantly elevated both the team and the product.\nHe works very efficiently and consistently delivers solutions that exceed expectations — both through the quality of the details and the overall user experience.",
-			by: "Anna Dymling, Founder, Oh!Garden",
-		},
-		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User Interviews"],
-		background: projectBackground("#D3D9CF"),
-	},
-	{
 		slug: "siggesta",
 		title: "Siggesta Gård",
 		years: "2023 - Ongoing",
@@ -51,6 +38,19 @@ const projectEntries: Omit<ProjectMeta, "thumbnail">[] = [
 		},
 		tags: ["Art Direction", "UI / UX", "CMS", "HTML & CSS", "Webflow"],
 		background: projectBackground("#EBE7E0"),
+	},
+	{
+		slug: "ohgarden",
+		title: "Oh!Garden",
+		years: "2024 - 2026",
+		intro:
+			"Sweden's fastest growing gardening app with a flourishing community of passionate home gardeners. Oh!Garden is focused on making plant care simpler, more accessible, and visually engaging for everyday users. The experience combines practical gardening tools with a warm and playful interface, helping users keep track of their plants without feeling overwhelmed by complexity.\nMy work spans UX, UI, and the visual system, shaping both the brand and the overall product direction.",
+		quote: {
+			text: "Kristofer is a highly skilled UX/UI designer with a strong combination of creativity, structure, and systematic thinking. He laid the foundation for our design system and significantly elevated both the team and the product.\nHe works very efficiently and consistently delivers solutions that exceed expectations — both through the quality of the details and the overall user experience.",
+			by: "Anna Dymling, Founder, Oh!Garden",
+		},
+		tags: ["Art Direction", "UI / UX", "Design system", "Web", "iOS", "Android", "User Interviews"],
+		background: projectBackground("#D3D9CF"),
 	},
 	{
 		slug: "mostwanted",
